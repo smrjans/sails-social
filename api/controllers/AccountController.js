@@ -35,11 +35,12 @@ module.exports = {
             var twUsers = 0;
 
             _.each(models, function (model) {
-
-                if (model.provider == "local") localUsers++;
-                else if (model.provider == "facebook") fbUsers++;
-                else if (model.provider == "twitter") twUsers++;
-
+              if(model.passports && model.passports.length) {
+                var passport = model.passports[model.passports.length - 1];
+                if (passport.provider == "local") localUsers++;
+                else if (passport.provider == "facebook") fbUsers++;
+                else if (passport.provider == "twitter") twUsers++;
+              }
             });
 
             return res.view({accountLabel: accountLabel, usersFound: usersFound, localUsers: localUsers, fbUsers: fbUsers, twUsers: twUsers});

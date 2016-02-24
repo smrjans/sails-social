@@ -26,7 +26,8 @@ module.exports.passport = {
     strategy: require('passport-facebook').Strategy,
     options: {
       clientID: '1748252818737627',
-      clientSecret: '832460a85416c11d2e547e307c95762f'
+      clientSecret: '832460a85416c11d2e547e307c95762f',
+      scope: ['email', 'user_friends','user_posts','user_location','user_hometown']
     }
   },
 
@@ -35,8 +36,9 @@ module.exports.passport = {
     protocol: 'oauth',
     strategy: require('passport-twitter').Strategy,
     options: {
-      consumerKey: '2676551822',
-      consumerSecret: 'Rhpm0xgxUTAQ59uZT4oi1vCWENlueTpmupuqWzupO9UyJ'
+      consumerKey: 'YrnZkjHujnewtCkgu9FK2SeHD',
+      consumerSecret: 'ltZS5TvIUczLbNv3AEAfPuqBvnMoW2hmMiRuwRQR287fi42YEi',
+      scope: ['email']
     }
   },
 

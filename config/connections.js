@@ -80,8 +80,15 @@ module.exports.connections = {
     user: 'YOUR_POSTGRES_USER',
     password: 'YOUR_POSTGRES_PASSWORD',
     database: 'YOUR_POSTGRES_DB'
-  }
+  },
 
+
+  twitter: {
+    /*consumer_key: 'YrnZkjHujnewtCkgu9FK2SeHD',
+    consumer_secret: 'ltZS5TvIUczLbNv3AEAfPuqBvnMoW2hmMiRuwRQR287fi42YEi',*/
+    accessToken: '2676551822-pzyFof4wm5uTOow1hABQYnd8BDQuujFu4PN6FnO',
+    accessTokenSecret: 'Rhpm0xgxUTAQ59uZT4oi1vCWENlueTpmupuqWzupO9UyJ'
+  }
 
   /***************************************************************************
   *                                                                          *
