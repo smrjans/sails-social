@@ -9,24 +9,15 @@ module.exports = {
 
   timeline: function(req, res){
     //Use the Waterline syntax
-    var criteria = {
-      where: req.query
-    };
 
-    if(!criteria.where.screen_name) {
-      criteria.where.screen_name = 'gorelative';
-    }
-
-    User.find({name:req.params[0]}).populateAll().exec(function (err, users) {
-      if (err) {
-        return res.negotiate(err);
-      }
-      sails.log('Wow, there are %d users named Finn.  Check it out:', users.length, users);
-      if(!users || !users.length) {
-        res.send("No such user found");
+      var criteria = {
+        where: req.query
+      };
+      if(!criteria.where.screen_name) {
+        criteria.where.screen_name = 'gorelative';
       }
 
-      TwitterService.find(users[0], 'timeline', criteria, function (err, result) {
+      TwitterService.find(req.params[0], 'timeline', criteria, function (err, result) {
         if (err) {
           sails.log.error(err);
           res.send(err.statusCode);
@@ -35,28 +26,19 @@ module.exports = {
           res.send(result);
         }
       });
-    });
   },
 
   search: function(req, res){
-    var criteria = {
-      where: {
-        q: req.query.q || req.params.query,
-        count: req.query.count || req.params.count
-      }
-    };
 
-    User.find({name:req.params[0]}).populateAll().exec(function (err, users) {
-      if (err) {
-        return res.negotiate(err);
-      }
-      sails.log('Wow, there are %d users named Finn.  Check it out:', users.length, users);
-      if (!users || !users.length) {
-        res.send("No such user found");
-      }
+      var criteria = {
+        where: {
+          q: req.query.q || req.params.query,
+          count: req.query.count || req.params.count
+        }
+      };
       sails.log.debug(criteria);
 
-      TwitterService.find(users[0], 'tweet', criteria, function (err, result) {
+      TwitterService.find(req.params[0], 'tweet', criteria, function (err, result) {
         if (err) {
           sails.log.error(err);
           res.send(err.statusCode);
@@ -66,6 +48,52 @@ module.exports = {
         }
 
       });
+  },
+
+  lookup: function(req, res){
+
+      var criteria = {
+        where: req.query
+      };
+      if(!criteria.where.screen_name) {
+        criteria.where.screen_name = 'gorelative';
+      }
+      sails.log.debug(criteria);
+
+      TwitterService.find(req.params[0], 'lookup', criteria, function (err, result) {
+        if (err) {
+          sails.log.error(err);
+          res.send(err.statusCode);
+        } else {
+          sails.log.debug('user/lookup result, ', result);
+          res.send(result);
+        }
+
+      });
+  },
+
+  rest: function(req, res){
+
+    var criteria = {
+      where: req.query
+    };
+    if(!criteria.where.screen_name) {
+      criteria.where.screen_name = 'gorelative';
+    }
+    sails.log.debug(criteria);
+
+    sails.log.debug('username: '+req.params[0]);
+    sails.log.debug('api: '+req.query.api);
+
+    TwitterService.find(req.params[0], req.query.api, criteria, function (err, result) {
+      if (err) {
+        sails.log.error(err);
+        res.send(err.statusCode);
+      } else {
+        sails.log.debug(req.params[1]+' result, ', result);
+        res.send(result);
+      }
+
     });
   }
 };
