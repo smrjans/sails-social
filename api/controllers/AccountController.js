@@ -25,7 +25,7 @@ var AccountController = (function () {
                     accountLabel = req.user.name.substring(0, 2).toUpperCase();
             }
         }
-        User.find().exec(function countCB(error, models) {
+        User.find().exec(function (error, models) {
             var usersFound = models.length;
             var localUsers = 0;
             var fbUsers = 0;

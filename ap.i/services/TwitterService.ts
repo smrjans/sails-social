@@ -1,4 +1,6 @@
 var Twit = require('twit');
+var sails = require('sails');
+//var User = require('user');
 var apiKey = sails.config.passport.twitter.options.consumerKey;
 var apiSecret = sails.config.passport.twitter.options.consumerSecret;
 var accessToken = sails.config.connections.twitter.consumerSecret;
@@ -6,7 +8,8 @@ var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
 
 export class TwitterService{
   twitter(username, cb) {
-    User.find({name: username}).populateAll().exec(function (err, users) {
+    //noinspection TypeScriptUnresolvedVariable
+    User.find({name: username}).populateAll().exec((err, users) => {
       if (err) {
         sails.log('Invalid user', user);
         return null;
@@ -39,7 +42,7 @@ export class TwitterService{
     sails.log('options >> ', options);
     // for now, only use the "where" part of the criteria set
     var criteria = options.where || {};
-    this.twitter(username, function(twitter) {
+    this.twitter(username, twitter => {
       switch (collectionName) {
         case 'location'	: return _this.trendingPlaces(twitter, criteria, afterwards);
         case 'trend'	: return _this.trends(twitter, criteria, afterwards);
@@ -59,7 +62,7 @@ export class TwitterService{
  }
 
   searchTweets(twitter, criteria, cb) {
-    twitter.get('search/tweets', criteria, function (err, result) {
+    twitter.get('search/tweets', criteria, (err, result:any)=> {
       if (err) return cb(err);
       if (!(result && result.statuses) ) return cb(result);
       cb(err, result.statuses);
@@ -69,7 +72,7 @@ export class TwitterService{
   trends(twitter, criteria, cb) {
     twitter.get('trends/place', {
       id: criteria.id || 1
-   }, function (err, result) {
+   }, (err, result) => {
       if (err) return cb(err);
       if (!(result[0] && result[0].trends) ) return cb(result);
       cb(err, result[0].trends);
@@ -87,7 +90,7 @@ export class TwitterService{
     console.log('getting timeline data for user: ', criteria);
     if (criteria.limit) criteria.count = criteria.limit;
 
-    twitter.get('statuses/user_timeline', criteria, function (err, result) {
+    twitter.get('statuses/user_timeline', criteria, (err, result) => {
       if (err) return cb(err, null);
       if (!(result && result)) return cb(result);
       cb(err, result);
@@ -97,7 +100,7 @@ export class TwitterService{
   lookup(twitter, criteria, cb) {
     console.log('looking up users: ', criteria);
 
-    twitter.get('users/lookup', criteria, function (err, result) {
+    twitter.get('users/lookup', criteria, (err, result) => {
       if (err) return cb(err, null);
       if (!(result && result)) return cb(result);
       cb(err, result);
@@ -107,7 +110,7 @@ export class TwitterService{
   api(twitter, api, criteria, cb) {
     console.log('looking up: '+api+' with: ', criteria);
 
-    twitter.get(api, criteria, function (err, result) {
+    twitter.get(api, criteria, (err, result) => {
       if (err) return cb(err, null);
       if (!(result && result)) return cb(result);
       cb(err, result);
@@ -115,4 +118,4 @@ export class TwitterService{
   }
 }
 
-module.exports.TwitterService = new TwitterService();
+module.exports = new TwitterService();

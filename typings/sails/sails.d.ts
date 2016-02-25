@@ -1,8 +1,10 @@
 ///<reference path="../node/node.d.ts"/>
 
-import SailsGlobal = Sails.SailsGlobal;
-declare var User: any;
-declare module Sails{
+declare module user{
+  var User: any;
+}
+//declare var User: any;
+declare module sails{
 
   import Promise = Q.Promise;
   export class Model{
@@ -93,7 +95,7 @@ declare module Sails{
   }
   export class QueryResult extends Record{
     passports;
-    destroy():Promise<Array<Sails.QueryResult>>;
+    destroy():Promise<Array<sails.QueryResult>>;
     toJSON():Object;
   }
 
@@ -121,6 +123,6 @@ declare module Sails{
     //log(msg:string, obj1?:any, obj2?:any, obj3?:any);
     log: {};
   }
-
+  var sails: any;
 }
-declare var sails: SailsGlobal;
+

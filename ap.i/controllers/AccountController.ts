@@ -28,7 +28,7 @@ export class AccountController{
             }
         }
 
-        User.find().exec(function countCB(error, models) {
+        User.find().exec((error, models)=> {
 
             var usersFound = models.length;
             var localUsers = 0;
