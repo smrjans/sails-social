@@ -7,6 +7,7 @@
  */
 var twitterService = require("../services/TwitterService");
 var sails = require('sails');
+var twitter = require('../models/Twitter');
 var TwitterController = (function () {
     function TwitterController() {
     }
@@ -50,6 +51,7 @@ var TwitterController = (function () {
         });
     };
     TwitterController.prototype.lookup = function (req, res) {
+        //twitter.find();
         var criteria = {
             where: req.query
         };

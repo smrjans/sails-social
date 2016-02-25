@@ -5,10 +5,12 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-module.exports = {
+export class Twitter{
 
   attributes: {
 
   }
-};
+}
+
+module.exports = new Twitter();
 

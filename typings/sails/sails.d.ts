@@ -107,6 +107,7 @@ declare module sails{
     sort(criteria:string):QueryBuilder;
     populate(association:string):QueryBuilder;
     populate(association:string,filter:Object):QueryBuilder;
+    populateAll():QueryBuilder;
   }
 
 

@@ -1,4 +1,5 @@
 import {TwitterService} from "../services/TwitterService";
+import {Twitter} from "../models/Twitter";
 /**
  * TwitterController
  *
@@ -8,6 +9,7 @@ import {TwitterService} from "../services/TwitterService";
 
 var twitterService: TwitterService = require("../services/TwitterService");
 var sails = require('sails');
+var twitter: Twitter = require('../models/Twitter');
 
 export class TwitterController {
 
@@ -55,7 +57,7 @@ export class TwitterController {
   }
 
   lookup(req, res){
-
+    //twitter.find();
     var criteria = {
       where: req.query
     };
