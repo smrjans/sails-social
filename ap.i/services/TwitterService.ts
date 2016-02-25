@@ -1,6 +1,7 @@
 var Twit = require('twit');
 var sails = require('sails');
 //var User = require('user');
+
 var apiKey = sails.config.passport.twitter.options.consumerKey;
 var apiSecret = sails.config.passport.twitter.options.consumerSecret;
 var accessToken = sails.config.connections.twitter.consumerSecret;

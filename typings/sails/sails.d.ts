@@ -1,9 +1,5 @@
 ///<reference path="../node/node.d.ts"/>
 
-declare module user{
-  var User: any;
-}
-//declare var User: any;
 declare module sails{
 
   import Promise = Q.Promise;
