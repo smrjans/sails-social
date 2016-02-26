@@ -1,122 +1,190 @@
 var Twit = require('twit');
-//var User = sails.models.user;
+
 var apiKey = sails.config.passport.twitter.options.consumerKey;
 var apiSecret = sails.config.passport.twitter.options.consumerSecret;
 var accessToken = sails.config.connections.twitter.consumerSecret;
 var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
-var TwitterService = (function () {
-    function TwitterService() {
-    }
-    TwitterService.prototype.twitter = function (username, cb) {
-        User.find({ name: username }).populateAll().exec(function (err, users) {
-            if (err) {
-                sails.log.error('Invalid user', user);
-                return null;
-            }
-            sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
-            if (!users || !users.length) {
-                sails.log.error("No such user found");
-            }
-            var user = users[0];
-            if (!user || !user.passports || !user.passports.length) {
-                sails.log.error('Invalid user', user);
-                return null;
-            }
-            var passport = user.passports[user.passports.length - 1];
-            var twitter = new Twit({
-                consumer_key: apiKey,
-                consumer_secret: apiSecret,
-                access_token: passport.tokens.token,
-                access_token_secret: passport.tokens.tokenSecret,
-                timeout_ms: 60 * 1000
-            });
-            return cb(twitter);
+
+module.exports = {
+
+    twitter: function (username, cb) {
+      User.find({name: username}).populateAll().exec(function (err, users) {
+        if (err) {
+          sails.log('Invalid user', user);
+          return null;
+        }
+        sails.log('Wow, there are %d users named Finn.  Check it out:', users.length, users);
+        if (!users || !users.length) {
+          res.send("No such user found");
+        }
+        var user = users[0];
+        if (!user || !user.passports || !user.passports.length) {
+          sails.log('Invalid user', user);
+          return null;
+        }
+        var passport = user.passports[user.passports.length - 1];
+        var twitter = new Twit({
+          consumer_key: apiKey,
+          consumer_secret: apiSecret,
+          access_token: passport.tokens.token,
+          access_token_secret: passport.tokens.tokenSecret,
+          timeout_ms: 60 * 1000
         });
-    };
-    TwitterService.prototype.find = function (username, collectionName, options, cb) {
-        var _this = this;
-        sails.log.debug('username >> ', username);
-        sails.log.debug('collectionName >> ', collectionName);
-        sails.log.debug('options >> ', options);
+        return cb(twitter);
+      });
+    },
+
+    find: function (username, collectionName,search_criteria,confidenceCriteria,options, cb) {
+      var _this = this;
+      sails.log('username >> ', username);
+      sails.log('collectionName >> ', collectionName);
+      sails.log('options >> ', options);
+      console.log("search_criteria ++++++ "+search_criteria.description);
+
+     /* var confidenceCriteria = {
+        name:3,
+        location:3,
+        screenName:3,
+        description:1,
+        partialFactor:0.5
+
+      };*/
         // for now, only use the "where" part of the criteria set
         var criteria = options.where || {};
-        this.twitter(username, function (twitter) {
-            switch (collectionName) {
-                case 'trendsPlace': return _this.trendsPlace(twitter, criteria, afterwards);
-                case 'trends': return _this.trends(twitter, criteria, afterwards);
-                case 'tweets': return _this.tweets(twitter, criteria, afterwards);
-                case 'timeline': return _this.timeline(twitter, criteria, afterwards);
-                case 'lookup': return _this.lookup(twitter, criteria, afterwards);
-                default: return _this.rest(twitter, collectionName, criteria, afterwards);
-            }
+        this.twitter(username, function(twitter) {
+          switch (collectionName) {
+              case 'location'	: return _this.trendingPlaces(twitter, criteria, afterwards);
+              case 'trend'	: return _this.trends(twitter, criteria, afterwards);
+              case 'tweet'	: return _this.searchTweets(twitter, criteria, afterwards);
+              case 'timeline' : return _this.timeline(twitter, criteria, afterwards);
+              case 'lookup' : return _this.lookup(twitter, criteria, afterwards);
+              case 'user' : return _this.searchUsers(twitter, criteria,search_criteria,confidenceCriteria,afterwards);
+              default: return _this.api(twitter, collectionName, criteria, afterwards);
+          }
         });
-        function afterwards(err, results) {
-            if (err)
-                return cb(err);
-            if (options.limit)
-                return cb(null, results.first(options.limit));
-            return cb(err, results);
+
+        function afterwards (err, results) {
+            if (err) return cb(err);
+            if (options.limit) return cb(null, _.first(results,options.limit));
+
+            return cb(err,results);
         }
-    };
-    TwitterService.prototype.tweets = function (twitter, criteria, cb) {
+    },
+
+    searchTweets: function (twitter, criteria, cb) {
         twitter.get('search/tweets', criteria, function (err, result) {
-            if (err)
-                return cb(err);
-            if (!(result && result.statuses))
-                return cb(result);
+            if (err) return cb(err);
+            if (!(result && result.statuses) ) return cb(result);
             cb(err, result.statuses);
         });
-    };
-    TwitterService.prototype.trendsPlace = function (twitter, criteria, cb) {
+    },
+
+    trends: function (twitter, criteria, cb) {
         twitter.get('trends/place', {
             id: criteria.id || 1
         }, function (err, result) {
-            if (err)
-                return cb(err);
-            if (!(result[0] && result[0].trends))
-                return cb(result);
+            if (err) return cb(err);
+            if (!(result[0] && result[0].trends) ) return cb(result);
             cb(err, result[0].trends);
         });
-    };
-    TwitterService.prototype.trends = function (twitter, criteria, cb) {
+    },
+
+    trendingPlaces: function (twitter, criteria, cb) {
         twitter.get('trends/closest', {
             lat: criteria.lat || 0,
             long: criteria.long || 0
         }, cb);
-    };
-    TwitterService.prototype.timeline = function (twitter, criteria, cb) {
+    },
+
+    timeline: function(twitter, criteria, cb) {
         console.log('getting timeline data for user: ', criteria);
-        if (criteria.limit)
-            criteria.count = criteria.limit;
+        if (criteria.limit) criteria.count = criteria.limit;
+
         twitter.get('statuses/user_timeline', criteria, function (err, result) {
-            if (err)
-                return cb(err, null);
-            if (!(result && result))
-                return cb(result);
+            if (err) return cb(err, null);
+            if (!(result && result)) return cb(result);
             cb(err, result);
         });
-    };
-    TwitterService.prototype.lookup = function (twitter, criteria, cb) {
+    },
+
+    lookup: function(twitter, criteria, cb) {
         console.log('looking up users: ', criteria);
+
         twitter.get('users/lookup', criteria, function (err, result) {
-            if (err)
-                return cb(err, null);
-            if (!(result && result))
-                return cb(result);
-            cb(err, result);
+          if (err) return cb(err, null);
+          if (!(result && result)) return cb(result);
+          cb(err, result);
         });
-    };
-    TwitterService.prototype.rest = function (twitter, api, criteria, cb) {
-        console.log('looking up: ' + api + ' with: ', criteria);
-        twitter.get(api, criteria, function (err, result) {
-            if (err)
-                return cb(err, null);
-            if (!(result && result))
-                return cb(result);
-            cb(err, result);
+    },
+    /**
+    *Search for users
+    *
+    */
+    searchUsers: function(twitter, criteria,search_criteria,confidenceCriteria,cb) {
+        var _this = this;
+        twitter.get('users/search', criteria, function (err, result) {
+          if (err) return cb(err, null);
+          if (!(result && result)) return cb(result);
+          var finalData=_this.calculateConfidence(result, search_criteria, confidenceCriteria)
+          cb(err, finalData);
         });
-    };
-    return TwitterService;
-})();
-exports.TwitterService = TwitterService;
-module.exports = new TwitterService();
+    },
+    /**
+    * calculate Confidence Score
+    **/
+    calculateConfidence : function(users,search_criteria,confidenceCriteria){
+
+      var _this = this;
+      var total=confidenceCriteria.name+confidenceCriteria.location+confidenceCriteria.description+confidenceCriteria.screenName;
+
+      for (var i = users.length - 1; i >= 0; i--) {
+        var confidence=0;
+        if(users[i].name.match(search_criteria.name)){
+          confidence=confidence+confidenceCriteria.name;
+        }else if (_this._splitString(search_criteria.name,users[i].name)){
+          confidence=confidence+(confidenceCriteria.name*confidenceCriteria.name_partialFactor);
+        }
+
+        if(users[i].location.match(search_criteria.location)){
+          confidence=confidence+confidenceCriteria.location;
+        }else if (_this._splitString(search_criteria.name,users[i].name)){
+          confidence=confidence+(confidenceCriteria.location*confidenceCriteria.location_partialFactor);
+        }
+
+        if(users[i].screen_name.match(search_criteria.screenName)){
+          confidence=confidence+confidenceCriteria.screenName;
+        }else if (_this._splitString(search_criteria.name,users[i].name)){
+          confidence=confidence+(confidenceCriteria.screenName*confidenceCriteria.screenName_partialFactor);
+        }
+
+        if(users[i].description.match(search_criteria.description)){
+          confidence=confidence+confidenceCriteria.description;
+        }else if (_this._splitString(search_criteria.name,users[i].name)){
+          confidence=confidence+(confidenceCriteria.description*confidenceCriteria.description_partialFactor);
+        }
+
+        users[i].score=(confidence/total)*100;
+      }
+      /*Sort in Desending Order*/
+      users.sort(function(a, b) {
+        return parseFloat(b.score) - parseFloat(a.score);
+      });
+      return users;
+    },
+
+    _splitString : function(searchCriteria, userName){
+     var splitCriteria = searchCriteria.split(" ");
+     splitCriteria.forEach(function (individualSearch, index){
+      return userName.indexOf(individualSearch) > -1 ? true : false;
+     });
+    },
+    api: function(twitter, api, criteria, cb) {
+      console.log('looking up: '+api+' with: ', criteria);
+
+      twitter.get(api, criteria, function (err, result) {
+        if (err) return cb(err, null);
+        if (!(result && result)) return cb(result);
+        cb(err, result);
+      });
+    }
+};
