@@ -6,7 +6,7 @@
  * @help 		:: See http://links.sailsjs.org/docs/controllers
  */
 
-import {Request, Response} from "express";
+import {Request, Response} from "sails";
 
 export class TestController {
 	index(req: Request, res: Response) {

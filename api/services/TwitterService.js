@@ -10,16 +10,16 @@ var TwitterService = (function () {
     TwitterService.prototype.twitter = function (username, cb) {
         User.find({ name: username }).populateAll().exec(function (err, users) {
             if (err) {
-                sails.log('Invalid user', user);
+                sails.log.error('Invalid user', user);
                 return null;
             }
-            sails.log('Wow, there are %d users named Finn.  Check it out:', users.length, users);
+            sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
             if (!users || !users.length) {
-                sails.log("No such user found");
+                sails.log.error("No such user found");
             }
             var user = users[0];
             if (!user || !user.passports || !user.passports.length) {
-                sails.log('Invalid user', user);
+                sails.log.error('Invalid user', user);
                 return null;
             }
             var passport = user.passports[user.passports.length - 1];
@@ -35,19 +35,19 @@ var TwitterService = (function () {
     };
     TwitterService.prototype.find = function (username, collectionName, options, cb) {
         var _this = this;
-        sails.log('username >> ', username);
-        sails.log('collectionName >> ', collectionName);
-        sails.log('options >> ', options);
+        sails.log.debug('username >> ', username);
+        sails.log.debug('collectionName >> ', collectionName);
+        sails.log.debug('options >> ', options);
         // for now, only use the "where" part of the criteria set
         var criteria = options.where || {};
         this.twitter(username, function (twitter) {
             switch (collectionName) {
-                case 'location': return _this.trendingPlaces(twitter, criteria, afterwards);
-                case 'trend': return _this.trends(twitter, criteria, afterwards);
-                case 'tweet': return _this.tweets(twitter, criteria, afterwards);
+                case 'trendsPlace': return _this.trendsPlace(twitter, criteria, afterwards);
+                case 'trends': return _this.trends(twitter, criteria, afterwards);
+                case 'tweets': return _this.tweets(twitter, criteria, afterwards);
                 case 'timeline': return _this.timeline(twitter, criteria, afterwards);
                 case 'lookup': return _this.lookup(twitter, criteria, afterwards);
-                default: return _this.api(twitter, collectionName, criteria, afterwards);
+                default: return _this.rest(twitter, collectionName, criteria, afterwards);
             }
         });
         function afterwards(err, results) {
@@ -67,7 +67,7 @@ var TwitterService = (function () {
             cb(err, result.statuses);
         });
     };
-    TwitterService.prototype.trends = function (twitter, criteria, cb) {
+    TwitterService.prototype.trendsPlace = function (twitter, criteria, cb) {
         twitter.get('trends/place', {
             id: criteria.id || 1
         }, function (err, result) {
@@ -78,7 +78,7 @@ var TwitterService = (function () {
             cb(err, result[0].trends);
         });
     };
-    TwitterService.prototype.trendingPlaces = function (twitter, criteria, cb) {
+    TwitterService.prototype.trends = function (twitter, criteria, cb) {
         twitter.get('trends/closest', {
             lat: criteria.lat || 0,
             long: criteria.long || 0
@@ -106,7 +106,7 @@ var TwitterService = (function () {
             cb(err, result);
         });
     };
-    TwitterService.prototype.api = function (twitter, api, criteria, cb) {
+    TwitterService.prototype.rest = function (twitter, api, criteria, cb) {
         console.log('looking up: ' + api + ' with: ', criteria);
         twitter.get(api, criteria, function (err, result) {
             if (err)

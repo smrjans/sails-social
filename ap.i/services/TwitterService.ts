@@ -14,16 +14,16 @@ export class TwitterService{
   twitter(username, cb) {
     User.find({name: username}).populateAll().exec((err, users) => {
       if (err) {
-        sails.log('Invalid user', user);
+        sails.log.error('Invalid user', user);
         return null;
       }
-      sails.log('Wow, there are %d users named Finn.  Check it out:', users.length, users);
+      sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
       if (!users || !users.length) {
-        sails.log("No such user found");
+        sails.log.error("No such user found");
       }
       var user = users[0];
       if (!user || !user.passports || !user.passports.length) {
-        sails.log('Invalid user', user);
+        sails.log.error('Invalid user', user);
         return null;
       }
       var passport = user.passports[user.passports.length - 1];
@@ -39,9 +39,9 @@ export class TwitterService{
  }
 
   find(username, collectionName, options, cb) {
-    sails.log('username >> ', username);
-    sails.log('collectionName >> ', collectionName);
-    sails.log('options >> ', options);
+    sails.log.debug('username >> ', username);
+    sails.log.debug('collectionName >> ', collectionName);
+    sails.log.debug('options >> ', options);
     // for now, only use the "where" part of the criteria set
     var criteria = options.where || {};
     this.twitter(username, twitter => {

@@ -5,7 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var twitterService = require("../services/TwitterService");
-var sails = require('sails');
 var twitter = require('../models/Twitter');
 var TwitterController = (function () {
     function TwitterController() {
@@ -30,7 +29,7 @@ var TwitterController = (function () {
             }
         });
     };
-    TwitterController.prototype.search = function (req, res) {
+    TwitterController.prototype.tweets = function (req, res) {
         var criteria = {
             where: {
                 q: req.query.q || req.params.query,
@@ -38,7 +37,7 @@ var TwitterController = (function () {
             }
         };
         sails.log.debug(criteria);
-        twitterService.find(req.params[0], 'tweet', criteria, function (err, result) {
+        twitterService.find(req.params[0], 'tweets', criteria, function (err, result) {
             if (err) {
                 sails.log.error(err);
                 res.send(err.statusCode);

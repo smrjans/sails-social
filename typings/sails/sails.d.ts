@@ -10,8 +10,9 @@
   export interface Controller{}
 }*/
 
-import * as e from "express";
+
 declare module "sails" {
+  import * as e from "express";
   function sails(): sails.Sails;
   module sails {
     import Promise = Q.Promise;
@@ -132,8 +133,39 @@ declare module "sails" {
 
     interface Sails {
       config: any;
-      log(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      log: Log;
       //log: {};
+    }
+
+    interface Log{
+      silent(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      error(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      warn(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      debug(msg:any, obj1?:any, obj2?:any, obj3?:any);
+      info(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      verbose(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      silly(msg:string, obj1?:any, obj2?:any, obj3?:any);
+    }
+
+    interface Config{
+      auth: any;
+      blueprint: any;
+      bootstrap: any;
+      connections: any;
+      cors: any;
+      csrf: any;
+      globals: any;
+      local: any;
+      http: any;
+      i18n: any;
+      log: any;
+      models: any;
+      passport: any;
+      policies: any;
+      routes: any;
+      session: any;
+      sockets: any;
+      views: any;
     }
   }
   export = sails;

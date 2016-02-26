@@ -1,3 +1,4 @@
+import {Sails, Request, Response} from "sails";
 /**
  * HomeController
  *
@@ -5,8 +6,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var sails = require('sails');
-import {Request, Response} from "sails";
+declare var sails: Sails;
 export class HomeController{
 
     // Index page

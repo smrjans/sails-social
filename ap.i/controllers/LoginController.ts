@@ -1,3 +1,4 @@
+import {Sails} from "sails";
 /**
  * AuthController
  *
@@ -5,7 +6,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var sails = require('sails');
+declare var sails: Sails;
 export class LoginController {
 
     // Login screen
