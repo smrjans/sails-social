@@ -5,6 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+global.confidenceCriteria;
 module.exports = {
 
   timeline: function(req, res){
@@ -29,24 +30,48 @@ module.exports = {
   },
 
   search: function(req, res){
-
       var criteria = {
         where: {
-          q: req.query.q || req.params.query,
+          q:req.body.name[0],
           count: req.query.count || req.params.count
         }
       };
-      sails.log.debug(criteria);
+      var search_criteria = {
+        name:req.body.name[0],
+        location:req.body.location[0],
+        screenName:req.body.screenName[0],
+        description:req.body.description[0]
+      };
 
-      TwitterService.find(req.params[0], 'tweet', criteria, function (err, result) {
+      TwitterService.find(req.params[0], 'user',search_criteria,global.confidenceCriteria,criteria, function (err, result) {
         if (err) {
           sails.log.error(err);
           res.send(err.statusCode);
         } else {
-          sails.log.debug('search/tweets result, ', result);
-          res.send(result);
+          return res.view({ 
+              users : result
+          });
         }
 
+      });
+  },
+
+  searchCriteria: function(req, res){
+      global.confidenceCriteria = {
+        name:Number(req.body.name[0]),
+        location:Number(req.body.location[0]),
+        screenName:Number(req.body.screenName[0]),
+        description:Number(req.body.description[0]),
+        name_partialFactor:Number(req.body.name[1]),
+        location_partialFactor:Number(req.body.location[1]),
+        screenName_partialFactor:Number(req.body.screenName[1]),
+        description_partialFactor:Number(req.body.description[1])
+
+      };
+      
+
+      return res.view({ 
+        user:global.loggedInProfile._json
       });
   },
 

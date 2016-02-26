@@ -14,7 +14,7 @@ module.exports = {
 
         var accountLabel = "U"; // Empty User
 
-        console.log(req.user);
+        console.log(+req.user);
 
         if (req.user) {
 

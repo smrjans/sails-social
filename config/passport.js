@@ -38,7 +38,8 @@ module.exports.passport = {
     options: {
       consumerKey: 'YrnZkjHujnewtCkgu9FK2SeHD',
       consumerSecret: 'ltZS5TvIUczLbNv3AEAfPuqBvnMoW2hmMiRuwRQR287fi42YEi',
-      scope: ['email']
+      scope: ['email'],
+      callbackURL: 'http://localhost:3000/auth/twitter/callback?next=/profile'
     }
   },
 
