@@ -14,7 +14,7 @@ import {Model} from "sails";
 
 var twitterService: TwitterService = require("../services/TwitterService");
 declare var sails: Sails;
-declare var twitter: Model;
+declare var Twitter: Model;
 
 export class TwitterController {
 
