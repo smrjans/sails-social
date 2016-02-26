@@ -1,6 +1,6 @@
 ///<reference path="../node/node.d.ts"/>
 
-declare module Sails{
+/*declare module Sails{
   import Promise = Q.Promise;
   export interface Model{}
   export interface WaterlinePromise<T> extends Promise<T>{}
@@ -8,13 +8,13 @@ declare module Sails{
   export interface QueryResult extends Record{}
   export interface QueryBuilder extends Promise<any>{}
   export interface Controller{}
-}
+}*/
 
 declare module "sails" {
   function sails(): sails.Sails;
   module sails {
     import Promise = Q.Promise;
-    interface Model extends Sails.Model{
+    interface Model{
       attributes:Object;
 
       create(params:Object):WaterlinePromise<QueryResult>;
@@ -87,25 +87,25 @@ declare module "sails" {
     }
 
 
-    interface WaterlinePromise<T> extends Promise<T>, Sails.WaterlinePromise {
+    interface WaterlinePromise<T> extends Promise<T> {
       exec(cb:(err:Error, results:Array<QueryResult>)=>void);
       exec(cb:(err:Error, result:QueryResult)=>void);
     }
 
 
-    interface Record extends Sails.Record {
+    interface Record {
       id:number;
       createdAt:Date;
       updatedAt:Date;
     }
-    interface QueryResult extends Record, Sails.QueryResult {
+    interface QueryResult extends Record {
       passports;
       destroy():Promise<Array<sails.QueryResult>>;
       toJSON():Object;
     }
 
 
-    interface QueryBuilder extends Promise<any>, Sails.QueryBuilder {
+    interface QueryBuilder extends Promise<any> {
       exec(cb:(error:any, results:Array<QueryResult>)=>void);
 
       where(condition:Object):QueryBuilder;
@@ -123,9 +123,9 @@ declare module "sails" {
     }
 
     interface Sails {
-      config: {};
-      //log(msg:string, obj1?:any, obj2?:any, obj3?:any);
-      log: {};
+      config: any;
+      log(msg:string, obj1?:any, obj2?:any, obj3?:any);
+      //log: {};
     }
   }
   export = sails;

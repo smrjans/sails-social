@@ -1,8 +1,8 @@
-import {Model} from "sails";
+import {Sails, Model} from "sails";
 var Twit = require('twit');
 //var sails = require('sails');
 
-declare var sails;
+declare var sails: Sails;
 declare var User: Model;
 //var User = sails.models.user;
 var apiKey = sails.config.passport.twitter.options.consumerKey;
