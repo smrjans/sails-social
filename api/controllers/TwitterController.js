@@ -5,7 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var twitterService = require("../services/TwitterService");
-var twitter = require('../models/Twitter');
 var TwitterController = (function () {
     function TwitterController() {
     }
