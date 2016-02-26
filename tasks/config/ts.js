@@ -9,20 +9,22 @@ module.exports = function(grunt) {
             files: [
                 {
                     src: [
-                        'api/**/*.ts'
+                        'ap.i/**/*.ts'
                     ],
-                    dest: ''// Will generate at the exact same location as the source.
+                    outDir: 'api'
+                    //dest: ''// Will generate at the exact same location as the source.
                 }
             ],
 
             options: {
+                //compiler: 'node_modules/typescript/bin/tsc',
                 module: 'commonjs',
-                target: 'es6',
+                target: 'es5',
                 fast: 'watch',
                 comments: true,
                 sourceMap: false,// Useless on the server side.
-                declaration: true,// Always useful to have declarations available.
-                noEmitOnError: false,// Force log errors.
+                declaration: false,// Always useful to have declarations available.
+                noEmitOnError: true,// Force log errors.
                 failOnTypeErrors: true,// Force log grunt errors pipeline.
                 verbose: true
             }

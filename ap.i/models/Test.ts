@@ -4,10 +4,14 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
-var Twitter = (function () {
-    function Twitter() {
+
+export module sails.models {
+  export class Test {
+    attributes:{
+
     }
-    return Twitter;
-})();
-exports.Twitter = Twitter;
-module.exports = new Twitter();
+  }
+  module.exports = new Test();
+}
+
+
