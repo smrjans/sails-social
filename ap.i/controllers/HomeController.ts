@@ -6,11 +6,11 @@
  */
 
 var sails = require('sails');
-import {Request, Response} from "express";
+import {Request, Response} from "sails";
 export class HomeController{
 
     // Index page
-    index(req: Request, res) {
+    index(req: Request, res: Response) {
 
         console.log("+ HOME.INDEX");
 

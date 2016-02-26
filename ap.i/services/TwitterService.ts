@@ -39,7 +39,6 @@ export class TwitterService{
  }
 
   find(username, collectionName, options, cb) {
-    var _this = this;
     sails.log('username >> ', username);
     sails.log('collectionName >> ', collectionName);
     sails.log('options >> ', options);
@@ -47,12 +46,12 @@ export class TwitterService{
     var criteria = options.where || {};
     this.twitter(username, twitter => {
       switch (collectionName) {
-        case 'location'	: return _this.trendingPlaces(twitter, criteria, afterwards);
-        case 'trend'	: return _this.trends(twitter, criteria, afterwards);
-        case 'tweet'	: return _this.searchTweets(twitter, criteria, afterwards);
-        case 'timeline' : return _this.timeline(twitter, criteria, afterwards);
-        case 'lookup' : return _this.lookup(twitter, criteria, afterwards);
-        default: return _this.api(twitter, collectionName, criteria, afterwards);
+        case 'trendsPlace'	: return this.trendsPlace(twitter, criteria, afterwards);
+        case 'trends'	: return this.trends(twitter, criteria, afterwards);
+        case 'tweets'	: return this.tweets(twitter, criteria, afterwards);
+        case 'timeline' : return this.timeline(twitter, criteria, afterwards);
+        case 'lookup' : return this.lookup(twitter, criteria, afterwards);
+        default: return this.rest(twitter, collectionName, criteria, afterwards);
       }
     });
 
@@ -64,7 +63,7 @@ export class TwitterService{
     }
  }
 
-  searchTweets(twitter, criteria, cb) {
+  tweets(twitter, criteria, cb) {
     twitter.get('search/tweets', criteria, (err, result:any)=> {
       if (err) return cb(err);
       if (!(result && result.statuses) ) return cb(result);
@@ -72,7 +71,7 @@ export class TwitterService{
     });
  }
 
-  trends(twitter, criteria, cb) {
+  trendsPlace(twitter, criteria, cb) {
     twitter.get('trends/place', {
       id: criteria.id || 1
    }, (err, result) => {
@@ -82,7 +81,7 @@ export class TwitterService{
     });
  }
 
-  trendingPlaces(twitter, criteria, cb) {
+  trends(twitter, criteria, cb) {
     twitter.get('trends/closest', {
       lat: criteria.lat || 0,
       long: criteria.long || 0
@@ -110,7 +109,7 @@ export class TwitterService{
     });
  }
 
-  api(twitter, api, criteria, cb) {
+  rest(twitter, api, criteria, cb) {
     console.log('looking up: '+api+' with: ', criteria);
 
     twitter.get(api, criteria, (err, result) => {

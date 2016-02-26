@@ -10,6 +10,7 @@
   export interface Controller{}
 }*/
 
+import * as e from "express";
 declare module "sails" {
   function sails(): sails.Sails;
   module sails {
@@ -120,6 +121,13 @@ declare module "sails" {
 
     interface Controller {
 
+    }
+    interface Request extends e.Request {
+      query: any;
+      params: any;
+    }
+    interface Response extends e.Response {
+      view(obj: any);
     }
 
     interface Sails {

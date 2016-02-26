@@ -1,5 +1,7 @@
 import {TwitterService} from "../services/TwitterService";
 import {Twitter} from "../models/Twitter";
+import {Request} from "sails";
+
 /**
  * TwitterController
  *
@@ -35,7 +37,7 @@ export class TwitterController {
     });
   }
 
-  search(req, res){
+  tweets(req, res){
     var criteria = {
       where: {
         q: req.query.q || req.params.query,
@@ -44,7 +46,7 @@ export class TwitterController {
     };
     sails.log.debug(criteria);
 
-    twitterService.find(req.params[0], 'tweet', criteria, (err, result)=> {
+    twitterService.find(req.params[0], 'tweets', criteria, (err, result)=> {
       if (err) {
         sails.log.error(err);
         res.send(err.statusCode);
@@ -56,7 +58,7 @@ export class TwitterController {
     });
   }
 
-  lookup(req, res){
+  lookup(req: Request, res){
     //twitter.find();
     var criteria = {
       where: req.query

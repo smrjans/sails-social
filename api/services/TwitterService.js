@@ -44,7 +44,7 @@ var TwitterService = (function () {
             switch (collectionName) {
                 case 'location': return _this.trendingPlaces(twitter, criteria, afterwards);
                 case 'trend': return _this.trends(twitter, criteria, afterwards);
-                case 'tweet': return _this.searchTweets(twitter, criteria, afterwards);
+                case 'tweet': return _this.tweets(twitter, criteria, afterwards);
                 case 'timeline': return _this.timeline(twitter, criteria, afterwards);
                 case 'lookup': return _this.lookup(twitter, criteria, afterwards);
                 default: return _this.api(twitter, collectionName, criteria, afterwards);
@@ -58,7 +58,7 @@ var TwitterService = (function () {
             return cb(err, results);
         }
     };
-    TwitterService.prototype.searchTweets = function (twitter, criteria, cb) {
+    TwitterService.prototype.tweets = function (twitter, criteria, cb) {
         twitter.get('search/tweets', criteria, function (err, result) {
             if (err)
                 return cb(err);
