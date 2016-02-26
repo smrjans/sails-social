@@ -4,7 +4,6 @@
  * @description :: Server-side logic for managing homes
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
-"use strict";
 var sails = require('sails');
 var LoginController = (function () {
     function LoginController() {
@@ -22,6 +21,6 @@ var LoginController = (function () {
         });
     };
     return LoginController;
-}());
+})();
 exports.LoginController = LoginController;
 module.exports = new LoginController();

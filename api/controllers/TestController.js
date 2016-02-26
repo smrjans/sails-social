@@ -5,7 +5,6 @@
  * @description :: Server-side logic for managing Tests
  * @help 		:: See http://links.sailsjs.org/docs/controllers
  */
-"use strict";
 var TestController = (function () {
     function TestController() {
     }
@@ -13,6 +12,6 @@ var TestController = (function () {
         res.status(200).send('OK1');
     };
     return TestController;
-}());
+})();
 exports.TestController = TestController;
 module.exports = new TestController();

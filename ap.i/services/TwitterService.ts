@@ -1,7 +1,10 @@
+import {Model} from "sails";
 var Twit = require('twit');
-var sails = require('sails');
-//var User = require('user');
+//var sails = require('sails');
 
+declare var sails;
+declare var User: Model;
+//var User = sails.models.user;
 var apiKey = sails.config.passport.twitter.options.consumerKey;
 var apiSecret = sails.config.passport.twitter.options.consumerSecret;
 var accessToken = sails.config.connections.twitter.consumerSecret;
@@ -9,7 +12,6 @@ var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
 
 export class TwitterService{
   twitter(username, cb) {
-    //noinspection TypeScriptUnresolvedVariable
     User.find({name: username}).populateAll().exec((err, users) => {
       if (err) {
         sails.log('Invalid user', user);

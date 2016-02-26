@@ -1,4 +1,3 @@
-"use strict";
 /**
  * TwitterController
  *
@@ -72,6 +71,6 @@ var TwitterController = (function () {
         });
     };
     return TwitterController;
-}());
+})();
 exports.TwitterController = TwitterController;
 module.exports = new TwitterController();

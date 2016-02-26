@@ -4,7 +4,6 @@
  * @description :: Server-side logic for managing your account
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
-"use strict";
 //var User = require('User');
 var User;
 var AccountController = (function () {
@@ -45,6 +44,6 @@ var AccountController = (function () {
         });
     };
     return AccountController;
-}());
+})();
 exports.AccountController = AccountController;
 module.exports = new AccountController();

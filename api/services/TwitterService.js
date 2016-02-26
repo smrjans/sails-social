@@ -1,6 +1,5 @@
-"use strict";
 var Twit = require('twit');
-var sails = require('sails');
+//var User = sails.models.user;
 var apiKey = sails.config.passport.twitter.options.consumerKey;
 var apiSecret = sails.config.passport.twitter.options.consumerSecret;
 var accessToken = sails.config.connections.twitter.consumerSecret;
@@ -9,7 +8,6 @@ var TwitterService = (function () {
     function TwitterService() {
     }
     TwitterService.prototype.twitter = function (username, cb) {
-        //noinspection TypeScriptUnresolvedVariable
         User.find({ name: username }).populateAll().exec(function (err, users) {
             if (err) {
                 sails.log('Invalid user', user);
@@ -119,6 +117,6 @@ var TwitterService = (function () {
         });
     };
     return TwitterService;
-}());
+})();
 exports.TwitterService = TwitterService;
 module.exports = new TwitterService();

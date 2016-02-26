@@ -4,7 +4,6 @@
  * @description :: Server-side logic for managing homes
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
-"use strict";
 var sails = require('sails');
 var HomeController = (function () {
     function HomeController() {
@@ -35,6 +34,6 @@ var HomeController = (function () {
         });
     };
     return HomeController;
-}());
+})();
 exports.HomeController = HomeController;
 module.exports = new HomeController();

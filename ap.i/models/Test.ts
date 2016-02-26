@@ -5,10 +5,13 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-export class Test {
-  attributes: {
+export module sails.models {
+  export class Test {
+    attributes:{
 
+    }
   }
+  module.exports = new Test();
 }
 
-module.exports = new Test();
+
