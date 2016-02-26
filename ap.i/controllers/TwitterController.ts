@@ -1,8 +1,8 @@
 import {TwitterService} from "../services/TwitterService";
-import {Twitter} from "../models/Twitter";
 import {Request} from "sails";
 import {Response} from "sails";
 import {Sails} from "sails";
+import {Model} from "sails";
 
 
 /**
@@ -14,7 +14,7 @@ import {Sails} from "sails";
 
 var twitterService: TwitterService = require("../services/TwitterService");
 declare var sails: Sails;
-var twitter: Twitter = require('../models/Twitter');
+declare var twitter: Model;
 
 export class TwitterController {
 

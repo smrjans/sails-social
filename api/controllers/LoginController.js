@@ -1,10 +1,3 @@
-/**
- * AuthController
- *
- * @description :: Server-side logic for managing homes
- * @help        :: See http://links.sailsjs.org/docs/controllers
- */
-var sails = require('sails');
 var LoginController = (function () {
     function LoginController() {
     }
