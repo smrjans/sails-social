@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body {
+            padding-top: 80px;
+            word-wrap: break-word;
+        }
+        .container {
+            width: 500px;
+            clear: both;
+        }
+        .container input {
+            width: 100%;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header text-center">
+            <h1><span class="fa fa-twitter">Twitter</h1>
+        </div>
+        <div class="row">
+    
+            <div class="col-sm-6">
+                <div class="well" id="centered" style="margin: 0 auto; width:350px;">
+
+
+                <div class="well">
+                <h3 class="text-info"><span class="fa fa-twitter"></span> Admin</h3>
+                    <p>
+                        <a href=<%= 'https://twitter.com/'+user.screen_name %> target="_blank"><img src=<%= user.profile_image_url %> style="width:60px;height:60px;"/></a>
+                        <strong>Id</strong>: <%= user.id %><br>
+                        <strong>Name</strong>: <%= user.name %><br>
+                        <strong>UserName</strong>: <%= user.screen_name %><br>
+                        <strong>Location</strong>: <%= user.location %><br>
+                    </p>
+
+            </div>
+                    <!-- <h3 class="text-info">
+            <span class="fa fa-twitter" id="centered"></span> Admin
+          </h3> -->
+                    <h3 class="text-primary">
+            <span class="fa fa-twitter"></span>Scoring Rules
+          </h3>
+                    <br></br>
+                    <div>
+                        <form method="post" action="twitter/searchCriteria" method="post">
+                            <table cellspacing="10">
+                                <tr>
+                                    <td>
+                                        <strong>Name Weight: </strong>
+                                        <input type="number" name="name[]" value="5" min="1" max="5">
+                                    </td>
+                                    <td>
+                                        <strong>Partiality: </strong>
+                                        <input type="text" name="name[]" value="0.5">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Location Weight : </strong>
+                                        <input type="number" name="location[]" value="3" min="1" max="5">
+                                    </td>
+                                    <td>
+                                        <strong>Partiality: </strong>
+                                        <input type="text" name="location[]" value="0.4">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Screen Name Weight : </strong>
+                                        <input type="number" name="screenName[]" value="5" min="1" max="5">
+                                    </td>
+                                    <td>
+                                        <strong>Partiality: </strong>
+                                        <input type="text" name="screenName[]" value="0.5">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Description Weight : </strong>
+                                        <input type="number" name="description[]" value="3" min="1" max="5">
+                                    </td>
+                                    <td>
+                                        <strong>Partiality: </strong>
+                                        <input type="text" name="description[]" value="0.1">
+                                    </td>
+                                </tr>
+                                <tr align="center">
+                                    <td align="center">
+                                        <input type="submit" value="Set Criteria">
+                                    </td>
+                                </tr>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<!-- index.ejs -->
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+        .container {
+        width: 500px;
+        clear: both;
+    }
+    .container input {
+        width: 100%;
+        clear: both;
+    }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1><span class="fa fa-twitter">User</h1>
+    </div>
+    <div class="row">
+
+      <!-- TWITTER INFORMATION -->
+      <div class="col-sm-6">
+        <div class="well" id="centered" style="margin: 0 auto; width:250px;">
+          <h3 class="text-info">
+            <span class="fa fa-twitter"></span> User
+          </h3>
+             <p>
+                <a href=<%= 'https://twitter.com/'+user.screen_name %> target="_blank"><img src=<%= user.profile_image_url %> style="width:60px;height:60px;"/></a>
+                <strong>Id</strong>: <%= user.id %><br>
+                <strong>Name</strong>: <%= user.name %><br>
+                <strong>UserName</strong>: <%= user.screen_name %><br>
+                <strong>Location</strong>: <%= user.location %><br>
+              </p>
+           <h3 class="text-primary">
+            <span class="fa fa-twitter"></span>Search Users
+          </h3>
+          <br></br> 
+          <div > 
+          <form method="post" action="search" method="post">
+                <strong>Name : </strong><input type="text" name="name[]">
+                <br>
+                <strong>Location : </strong><input type="text" name="location[]">
+                <br>
+                <strong>Screen Name : </strong><input type="text" name="screenName[]">
+                <br>
+                <strong>Description : </strong><input type="text" name="description[]">
+                <br>
+                <br>
+                <input type="submit" value="search">
+          </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+</div>
+</body>
+</html>

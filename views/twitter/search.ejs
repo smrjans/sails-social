@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- index.ejs -->
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+        .container {
+        width: 500px;
+        clear: both;
+    }
+    .container input {
+        width: 100%;
+        clear: both;
+    }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1><span class="fa fa-twitter">  Search Results</h1>
+    </div>
+    <div class="row">
+
+      <!-- TWITTER INFORMATION -->
+      <div class="col-sm-6">
+        <div class="well" id="centered" style="margin: 0 auto; width:600px;">
+           <h3 class="text-primary">
+            <span class="fa fa-twitter"></span> Users Found
+          </h3>
+          <br></br> 
+          <div > 
+       <table >
+            <% for(var i=0; i < users.length; i++) { %>
+              <tr>
+                <td><%= users[i].name %></td>
+                <td><%= users[i].location %></td>
+                <td><a href=<%= 'https://twitter.com/'+users[i].screen_name %> target="_blank"><img src=<%= users[i].profile_image_url %> style="width:60px;height:60px;"/></a><br></td>
+                <td><%= users[i].screen_name %></td>
+                <!-- <td><font color="red"><%= Math.round(users[i].score)+' % Match' %></font></td> -->
+                <td><font color="red"><%=users[i].score.toFixed(2)+' % Match' %></font></td>
+              </tr>
+          <% } %>
+        </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+</div>
+</body>
+</html>
