@@ -1,11 +1,6 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
-    });
-};
+"use strict";
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 /**
  * TwitterController
  *
@@ -15,9 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var twitterService = require("../services/TwitterService");
 var Promise = require('bluebird');
 var _ = require('lodash');
-export class TwitterController {
-    search(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+var TwitterController = (function () {
+    function TwitterController() {
+    }
+    TwitterController.prototype.search = function (req, res) {
+        async(function (req, res) {
             var criteria = {
                 where: {
                     q: req.body.name[0],
@@ -30,13 +27,14 @@ export class TwitterController {
                 screenName: req.body.screenName[0],
                 description: req.body.description[0]
             };
-            var result = twitterService.searchUsers(req.params[0], search_criteria, global['confidenceCriteria'], criteria);
+            return await(twitterService.searchUsers(req.params[0], search_criteria, global['confidenceCriteria'], criteria));
+        })(req, res).then(function (result) {
             return res.view({
                 users: result
             });
         });
-    }
-    searchCriteria(req, res) {
+    };
+    TwitterController.prototype.searchCriteria = function (req, res) {
         global['confidenceCriteria'] = {
             name: Number(req.body.name[0]),
             location: Number(req.body.location[0]),
@@ -50,39 +48,37 @@ export class TwitterController {
         return res.view({
             user: global['loggedInProfile']._json
         });
-    }
-    timeline(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //Use the Waterline syntax
-            var criteria = {
-                where: req.query
-            };
-            if (!criteria.where.screen_name) {
-                criteria.where.screen_name = 'D_Asterra';
-            }
-            var result = yield twitterService.find(req.params[0], 'timeline', criteria);
+    };
+    TwitterController.prototype.timeline = function (req, res) {
+        //Use the Waterline syntax
+        var criteria = {
+            where: req.query
+        };
+        if (!criteria.where.screen_name) {
+            criteria.where.screen_name = 'D_Asterra';
+        }
+        /*var result = await twitterService.find(req.params[0], 'timeline', criteria);
+        sails.log.debug('search/user_timeline result, ', result);
+        res.send(result);*/
+        var timeline = async(function (req, res) {
+            return await(twitterService.find(req.params[0], 'timeline', criteria));
+        });
+        timeline(req, res).then(function (result) {
             sails.log.debug('search/user_timeline result, ', result);
             res.send(result);
-            /*var result = async(()=>{
-              return await(twitterService.find(req.params[0], 'timeline', criteria));
-            });
-            result().then(result => {
-              sails.log.debug('search/user_timeline result, ', result);
-              res.send(result);
-            });*/
-            /*twitterService.find(req.params[0], 'timeline', criteria, (err, result)=> {
-              if (err) {
-                //noinspection TypeScriptUnresolvedVariable
-                sails.log.error(err);
-                res.send(err.statusCode);
-              } else {
-                sails.log.debug('search/user_timeline result, ', result);
-                res.send(result);
-              }
-            });*/
         });
-    }
-    tweets(req, res) {
+        /*twitterService.find(req.params[0], 'timeline', criteria, (err, result)=> {
+          if (err) {
+            //noinspection TypeScriptUnresolvedVariable
+            sails.log.error(err);
+            res.send(err.statusCode);
+          } else {
+            sails.log.debug('search/user_timeline result, ', result);
+            res.send(result);
+          }
+        });*/
+    };
+    TwitterController.prototype.tweets = function (req, res) {
         var criteria = {
             where: {
                 q: req.query.q || req.params.query,
@@ -100,8 +96,8 @@ export class TwitterController {
           }
     
         });*/
-    }
-    lookup(req, res) {
+    };
+    TwitterController.prototype.lookup = function (req, res) {
         //twitter.find();
         var criteria = {
             where: req.query
@@ -121,6 +117,8 @@ export class TwitterController {
           }
     
         });*/
-    }
-}
-//module.exports = new TwitterController();
+    };
+    return TwitterController;
+}());
+exports.TwitterController = TwitterController;
+module.exports = new TwitterController();

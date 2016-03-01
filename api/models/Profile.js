@@ -4,6 +4,11 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
-export class Profile {
-}
+"use strict";
+var Profile = (function () {
+    function Profile() {
+    }
+    return Profile;
+}());
+exports.Profile = Profile;
 module.exports = new Profile();

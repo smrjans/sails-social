@@ -3,7 +3,10 @@ import {Response} from "sails";
 import {Sails} from "sails";
 import {Model} from "sails";
 import {TwitterService} from "../services/TwitterService";
-
+import {Async} from "asyncawait";
+import {Await} from "asyncawait";
+var async: Async = require('asyncawait/async');
+var await: Await = require('asyncawait/await');
 
 /**
  * TwitterController
@@ -22,23 +25,26 @@ declare var Twitter: Model;
 
 export class TwitterController {
 
-  async search(req, res){
-    var criteria = {
-      where: {
-        q:req.body.name[0],
-        count: req.query.count || req.params.count
-      }
-    };
-    var search_criteria = {
-      name:req.body.name[0],
-      location:req.body.location[0],
-      screenName:req.body.screenName[0],
-      description:req.body.description[0]
-    };
+  search(req, res){
+   async((req, res)=>{
+      var criteria = {
+        where: {
+          q:req.body.name[0],
+          count: req.query.count || req.params.count
+        }
+      };
+      var search_criteria = {
+        name:req.body.name[0],
+        location:req.body.location[0],
+        screenName:req.body.screenName[0],
+        description:req.body.description[0]
+      };
 
-    var result = twitterService.searchUsers(req.params[0], search_criteria,global['confidenceCriteria'],criteria);
-    return res.view({
-      users : result
+      return await(twitterService.searchUsers(req.params[0], search_criteria,global['confidenceCriteria'],criteria));
+    })(req, res).then(result =>{
+      return res.view({
+        users : result
+      });
     });
   }
 
@@ -60,7 +66,7 @@ export class TwitterController {
     });
   }
 
-  async timeline(req, res){
+  timeline(req, res){
     //Use the Waterline syntax
 
     var criteria = {
@@ -70,16 +76,16 @@ export class TwitterController {
       criteria.where.screen_name = 'D_Asterra';
     }
 
-    var result = await twitterService.find(req.params[0], 'timeline', criteria);
+    /*var result = await twitterService.find(req.params[0], 'timeline', criteria);
     sails.log.debug('search/user_timeline result, ', result);
-    res.send(result);
-    /*var result = async(()=>{
+    res.send(result);*/
+    var timeline = async((req, res)=>{
       return await(twitterService.find(req.params[0], 'timeline', criteria));
     });
-    result().then(result => {
+    timeline(req, res).then(result => {
       sails.log.debug('search/user_timeline result, ', result);
       res.send(result);
-    });*/
+    });
     /*twitterService.find(req.params[0], 'timeline', criteria, (err, result)=> {
       if (err) {
         //noinspection TypeScriptUnresolvedVariable

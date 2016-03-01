@@ -1,7 +1,14 @@
 import {Sails, Model} from "sails";
+import {Async} from "asyncawait";
+import {Await} from "asyncawait";
+import {Promise} from "asyncawait";
 
-var Twit = require('twit');
+var _ = require('lodash');
+
+var Twit = require('bluebird').promisifyAll(require('twit'));
 //var sails = require('sails');
+var async: Async = require('asyncawait/async');
+var await: Await = require('asyncawait/await');
 
 declare var sails: Sails;
 declare var User: Model;
@@ -13,91 +20,112 @@ var accessToken = sails.config.connections.twitter.consumerSecret;
 var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
 
 export class TwitterService{
-  async twitter(username): Promise<any>  {
-    User.find({name: username}).populateAll().exec((err, users) => {
-      if (err) {
-        sails.log.error('Invalid user', user);
-        return null;
-      }
-      sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
-      if (!users || !users.length) {
-        sails.log.error("No such user found");
-      }
-      var user = users[0];
-      if (!user || !user.passports || !user.passports.length) {
-        sails.log.error('Invalid user', user);
-        return null;
-      }
-      var passport = user.passports[user.passports.length - 1];
-      var twitter = new Twit({
-        consumer_key: apiKey,
-        consumer_secret: apiSecret,
-        access_token: passport.tokens.token,
-        access_token_secret: passport.tokens.tokenSecret,
-        timeout_ms: 60 * 1000
+  twitter(username): Promise<any> {
+    return async(username=>{
+      User.find({name: username}).populateAll().exec((err, users) => {
+        if (err) {
+          sails.log.error('Invalid user', user);
+          return null;
+        }
+        sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
+        if (!users || !users.length) {
+          sails.log.error("No such user found");
+        }
+        var user = users[0];
+        if (!user || !user.passports || !user.passports.length) {
+          sails.log.error('Invalid user', user);
+          return null;
+        }
+        var passport = user.passports[user.passports.length - 1];
+        var twitter = new Twit({
+          consumer_key: apiKey,
+          consumer_secret: apiSecret,
+          access_token: passport.tokens.token,
+          access_token_secret: passport.tokens.tokenSecret,
+          timeout_ms: 60 * 1000
+        });
+        return twitter;
       });
-      return twitter;
-    });
+    })(username);
   }
 
-  async find(username, collectionName, options): Promise<any> {
-    sails.log.debug('username >> ', username);
-    sails.log.debug('collectionName >> ', collectionName);
-    sails.log.debug('options >> ', options);
+  find(username, collectionName, options){
+    return async((username, collectionName, options)=> {
+      sails.log.debug('username >> ', username);
+      sails.log.debug('collectionName >> ', collectionName);
+      sails.log.debug('options >> ', options);
 
-    // for now, only use the "where" part of the criteria set
-    var criteria = options.where || {};
-     var twitter = await this.twitter(username);
+      // for now, only use the "where" part of the criteria set
+      var criteria = options.where || {};
+      var twitter = await(this.twitter(username));
       switch (collectionName) {
-        case 'trendsPlace'	: return this.trendsPlace(twitter, criteria);
-        case 'trends'	: return this.trends(twitter, criteria);
-        case 'tweets'	: return this.tweets(twitter, criteria);
-        case 'timeline' : return this.timeline(twitter, criteria);
-        case 'lookup' : return this.lookup(twitter, criteria);
+        case 'trendsPlace'  :
+          return this.trendsPlace(twitter, criteria);
+        case 'trends'  :
+          return this.trends(twitter, criteria);
+        case 'tweets'  :
+          return this.tweets(twitter, criteria);
+        case 'timeline' :
+          return this.timeline(twitter, criteria);
+        case 'lookup' :
+          return this.lookup(twitter, criteria);
         //case 'user' : return this.searchUsers(twitter, criteria, searchCriteria, confidenceCriteria, afterwards);
-        default: return null; //this.rest(twitter, collectionName, criteria);
+        default:
+          return null; //this.rest(twitter, collectionName, criteria);
       }
+    })(username, collectionName, options);
   }
 
-  async tweets(twitter, criteria):Promise<any>  {
-    return await twitter.get('search/tweets', criteria);
+  tweets(twitter, criteria) {
+    return async((twitter, criteria)=>{
+      return await(twitter.get('search/tweets', criteria));
+    })(twitter, criteria);
   }
 
-  async trendsPlace(twitter, criteria): Promise<any>  {
-    return await twitter.get('trends/place', {
-      id: criteria.id || 1
-    });
+  trendsPlace(twitter, criteria)  {
+    return async((twitter, criteria)=>{
+      return await(twitter.get('trends/place', {
+        id: criteria.id || 1
+      }));
+    })(twitter, criteria);
   }
 
-  async trends(twitter, criteria): Promise<any>  {
-    return await twitter.get('trends/closest', {
-      lat: criteria.lat || 0,
-      long: criteria.long || 0
-    });
+  trends(twitter, criteria) {
+    return async((twitter, criteria)=> {
+      return await(twitter.get('trends/closest', {
+        lat: criteria.lat || 0,
+        long: criteria.long || 0
+      }));
+    })(twitter, criteria);
   }
 
-  async timeline(twitter, criteria): Promise<any>  {
-    console.log('getting timeline data for user: ', criteria);
-    if (criteria.limit) criteria.count = criteria.limit;
+  timeline(twitter, criteria) {
+    return async((twitter, criteria)=> {
+      console.log('getting timeline data for user: ', criteria);
+      if (criteria.limit) criteria.count = criteria.limit;
 
-    return await twitter.get('statuses/user_timeline', criteria);
+      return await(twitter.get('statuses/user_timeline', criteria));
+    })(twitter, criteria);
   }
 
-  async lookup(twitter, criteria): Promise<any>  {
-    console.log('looking up users: ', criteria);
-
-    return await twitter.get('users/lookup', criteria);
+  lookup(twitter, criteria) {
+    return async((twitter, criteria)=> {
+      console.log('looking up users: ', criteria);
+      return await(twitter.get('users/lookup', criteria));
+    })(twitter, criteria);
   }
 
   /**
    *Search for users
    *
    */
-  async searchUsers(username, criteria,searchCriteria,confidenceCriteria): Promise<any>  {
-    sails.log.debug("search_criteria ++++++ "+searchCriteria.description);
-    var twitter = await this.twitter(username);
-    var result = await twitter.get('users/search', criteria);
-    return this.calculateConfidence(result, searchCriteria, confidenceCriteria);
+  searchUsers(username, criteria,searchCriteria,confidenceCriteria) {
+    return async((username, criteria,searchCriteria,confidenceCriteria)=> {
+      sails.log.debug("search_criteria ++++++ " + searchCriteria.description);
+      var twitter = await(this.twitter(username));
+      var result = await(twitter.get('users/search', criteria));
+      return this.calculateConfidence(result, searchCriteria, confidenceCriteria);
+    })(username, criteria,searchCriteria,confidenceCriteria);
   }
 
   /**

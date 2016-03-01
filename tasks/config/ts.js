@@ -18,8 +18,8 @@ module.exports = function(grunt) {
 
             options: {
                 compiler: 'node_modules/typescript/bin/tsc',
-                //module: 'commonjs',
-                target: 'es6',
+                module: 'commonjs',
+                target: 'es5',
                 fast: 'watch',
                 comments: true,
                 sourceMap: false,// Useless on the server side.

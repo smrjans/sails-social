@@ -4,17 +4,19 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
-export var sails;
+"use strict";
+var sails;
 (function (sails) {
     var models;
     (function (models) {
-        class Test {
-            constructor() {
+        var Test = (function () {
+            function Test() {
                 this.attributes = {};
                 this.connection = 'someMongodbServer';
             }
-        }
+            return Test;
+        }());
         models.Test = Test;
         module.exports = new Test();
     })(models = sails.models || (sails.models = {}));
-})(sails || (sails = {}));
+})(sails = exports.sails || (exports.sails = {}));

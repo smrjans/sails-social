@@ -4,11 +4,14 @@
  * @description :: Server-side logic for managing your account
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
+"use strict";
 //var User = require('User');
 var User;
-export class AccountController {
+var AccountController = (function () {
+    function AccountController() {
+    }
     // Account main page
-    index(req, res) {
+    AccountController.prototype.index = function (req, res) {
         console.log("+ ACCOUNT.INDEX");
         var accountLabel = "U"; // Empty User
         console.log(req.user);
@@ -22,12 +25,12 @@ export class AccountController {
                     accountLabel = req.user.name.substring(0, 2).toUpperCase();
             }
         }
-        User.find().exec((error, models) => {
+        User.find().exec(function (error, models) {
             var usersFound = models.length;
             var localUsers = 0;
             var fbUsers = 0;
             var twUsers = 0;
-            models.forEach(model => {
+            models.forEach(function (model) {
                 if (model.passports && model.passports.length) {
                     var passport = model.passports[model.passports.length - 1];
                     if (passport.provider == "local")
@@ -40,6 +43,8 @@ export class AccountController {
             });
             return res.view({ accountLabel: accountLabel, usersFound: usersFound, localUsers: localUsers, fbUsers: fbUsers, twUsers: twUsers });
         });
-    }
-}
+    };
+    return AccountController;
+}());
+exports.AccountController = AccountController;
 module.exports = new AccountController();

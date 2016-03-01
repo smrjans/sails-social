@@ -11,7 +11,8 @@
  * return res.forbidden('Access denied.');
  * ```
  */
-export function forbidden(data, options) {
+"use strict";
+function forbidden(data, options) {
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
     var res = this.res;
@@ -72,4 +73,5 @@ export function forbidden(data, options) {
             return res.send(html);
         });
 }
+exports.forbidden = forbidden;
 module.exports = forbidden;

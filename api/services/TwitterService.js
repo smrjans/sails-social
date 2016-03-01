@@ -1,21 +1,20 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
-    });
-};
-var Twit = require('twit');
+"use strict";
+var _ = require('lodash');
+var Twit = require('bluebird').promisifyAll(require('twit'));
+//var sails = require('sails');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 //var User = sails.models.user;
 var apiKey = sails.config.passport.twitter.options.consumerKey;
 var apiSecret = sails.config.passport.twitter.options.consumerSecret;
 var accessToken = sails.config.connections.twitter.consumerSecret;
 var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
-export class TwitterService {
-    twitter(username) {
-        return __awaiter(this, void 0, Promise, function* () {
-            User.find({ name: username }).populateAll().exec((err, users) => {
+var TwitterService = (function () {
+    function TwitterService() {
+    }
+    TwitterService.prototype.twitter = function (username) {
+        return async(function (username) {
+            User.find({ name: username }).populateAll().exec(function (err, users) {
                 if (err) {
                     sails.log.error('Invalid user', user);
                     return null;
@@ -39,77 +38,85 @@ export class TwitterService {
                 });
                 return twitter;
             });
-        });
-    }
-    find(username, collectionName, options) {
-        return __awaiter(this, void 0, Promise, function* () {
+        })(username);
+    };
+    TwitterService.prototype.find = function (username, collectionName, options) {
+        var _this = this;
+        return async(function (username, collectionName, options) {
             sails.log.debug('username >> ', username);
             sails.log.debug('collectionName >> ', collectionName);
             sails.log.debug('options >> ', options);
             // for now, only use the "where" part of the criteria set
             var criteria = options.where || {};
-            var twitter = yield this.twitter(username);
+            var twitter = await(_this.twitter(username));
             switch (collectionName) {
-                case 'trendsPlace': return this.trendsPlace(twitter, criteria);
-                case 'trends': return this.trends(twitter, criteria);
-                case 'tweets': return this.tweets(twitter, criteria);
-                case 'timeline': return this.timeline(twitter, criteria);
-                case 'lookup': return this.lookup(twitter, criteria);
+                case 'trendsPlace':
+                    return _this.trendsPlace(twitter, criteria);
+                case 'trends':
+                    return _this.trends(twitter, criteria);
+                case 'tweets':
+                    return _this.tweets(twitter, criteria);
+                case 'timeline':
+                    return _this.timeline(twitter, criteria);
+                case 'lookup':
+                    return _this.lookup(twitter, criteria);
                 //case 'user' : return this.searchUsers(twitter, criteria, searchCriteria, confidenceCriteria, afterwards);
-                default: return null; //this.rest(twitter, collectionName, criteria);
+                default:
+                    return null; //this.rest(twitter, collectionName, criteria);
             }
-        });
-    }
-    tweets(twitter, criteria) {
-        return __awaiter(this, void 0, Promise, function* () {
-            return yield twitter.get('search/tweets', criteria);
-        });
-    }
-    trendsPlace(twitter, criteria) {
-        return __awaiter(this, void 0, Promise, function* () {
-            return yield twitter.get('trends/place', {
+        })(username, collectionName, options);
+    };
+    TwitterService.prototype.tweets = function (twitter, criteria) {
+        return async(function (twitter, criteria) {
+            return await(twitter.get('search/tweets', criteria));
+        })(twitter, criteria);
+    };
+    TwitterService.prototype.trendsPlace = function (twitter, criteria) {
+        return async(function (twitter, criteria) {
+            return await(twitter.get('trends/place', {
                 id: criteria.id || 1
-            });
-        });
-    }
-    trends(twitter, criteria) {
-        return __awaiter(this, void 0, Promise, function* () {
-            return yield twitter.get('trends/closest', {
+            }));
+        })(twitter, criteria);
+    };
+    TwitterService.prototype.trends = function (twitter, criteria) {
+        return async(function (twitter, criteria) {
+            return await(twitter.get('trends/closest', {
                 lat: criteria.lat || 0,
                 long: criteria.long || 0
-            });
-        });
-    }
-    timeline(twitter, criteria) {
-        return __awaiter(this, void 0, Promise, function* () {
+            }));
+        })(twitter, criteria);
+    };
+    TwitterService.prototype.timeline = function (twitter, criteria) {
+        return async(function (twitter, criteria) {
             console.log('getting timeline data for user: ', criteria);
             if (criteria.limit)
                 criteria.count = criteria.limit;
-            return yield twitter.get('statuses/user_timeline', criteria);
-        });
-    }
-    lookup(twitter, criteria) {
-        return __awaiter(this, void 0, Promise, function* () {
+            return await(twitter.get('statuses/user_timeline', criteria));
+        })(twitter, criteria);
+    };
+    TwitterService.prototype.lookup = function (twitter, criteria) {
+        return async(function (twitter, criteria) {
             console.log('looking up users: ', criteria);
-            return yield twitter.get('users/lookup', criteria);
-        });
-    }
+            return await(twitter.get('users/lookup', criteria));
+        })(twitter, criteria);
+    };
     /**
      *Search for users
      *
      */
-    searchUsers(username, criteria, searchCriteria, confidenceCriteria) {
-        return __awaiter(this, void 0, Promise, function* () {
+    TwitterService.prototype.searchUsers = function (username, criteria, searchCriteria, confidenceCriteria) {
+        var _this = this;
+        return async(function (username, criteria, searchCriteria, confidenceCriteria) {
             sails.log.debug("search_criteria ++++++ " + searchCriteria.description);
-            var twitter = yield this.twitter(username);
-            var result = yield twitter.get('users/search', criteria);
-            return this.calculateConfidence(result, searchCriteria, confidenceCriteria);
-        });
-    }
+            var twitter = await(_this.twitter(username));
+            var result = await(twitter.get('users/search', criteria));
+            return _this.calculateConfidence(result, searchCriteria, confidenceCriteria);
+        })(username, criteria, searchCriteria, confidenceCriteria);
+    };
     /**
      * calculate Confidence Score
      **/
-    calculateConfidence(users, search_criteria, confidenceCriteria) {
+    TwitterService.prototype.calculateConfidence = function (users, search_criteria, confidenceCriteria) {
         var total = confidenceCriteria.name + confidenceCriteria.location + confidenceCriteria.description + confidenceCriteria.screenName;
         for (var i = users.length - 1; i >= 0; i--) {
             var confidence = 0;
@@ -144,12 +151,14 @@ export class TwitterService {
             return parseFloat(b.score) - parseFloat(a.score);
         });
         return users;
-    }
-    splitString(searchCriteria, userName) {
+    };
+    TwitterService.prototype.splitString = function (searchCriteria, userName) {
         var splitCriteria = searchCriteria.split(" ");
         splitCriteria.forEach(function (individualSearch, index) {
             return userName.indexOf(individualSearch) > -1 ? true : false;
         });
-    }
-}
+    };
+    return TwitterService;
+}());
+exports.TwitterService = TwitterService;
 module.exports = new TwitterService();

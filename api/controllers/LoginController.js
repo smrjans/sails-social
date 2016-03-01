@@ -1,6 +1,9 @@
-export class LoginController {
+"use strict";
+var LoginController = (function () {
+    function LoginController() {
+    }
     // Login screen
-    index(req, res) {
+    LoginController.prototype.index = function (req, res) {
         var enableLocalAuth = sails.config.authEnabled.local;
         var enableTwitterAuth = sails.config.authEnabled.twitter;
         var enableFacebookAuth = sails.config.authEnabled.facebook;
@@ -10,6 +13,8 @@ export class LoginController {
             enableTwitterAuth: enableTwitterAuth,
             enableFacebookAuth: enableFacebookAuth
         });
-    }
-}
+    };
+    return LoginController;
+}());
+exports.LoginController = LoginController;
 module.exports = new LoginController();
