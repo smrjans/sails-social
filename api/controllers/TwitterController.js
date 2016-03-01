@@ -14,24 +14,25 @@ var TwitterController = (function () {
     function TwitterController() {
     }
     TwitterController.prototype.search = function (req, res) {
-        async(function (req, res) {
-            var criteria = {
-                where: {
-                    q: req.body.name[0],
-                    count: req.query.count || req.params.count
-                }
-            };
-            var search_criteria = {
-                name: req.body.name[0],
-                location: req.body.location[0],
-                screenName: req.body.screenName[0],
-                description: req.body.description[0]
-            };
-            return await(twitterService.searchUsers(req.params[0], search_criteria, global['confidenceCriteria'], criteria));
-        })(req, res).then(function (result) {
+        var criteria = {
+            where: {
+                q: req.body.name[0],
+                count: req.query.count || req.params.count
+            }
+        };
+        var search_criteria = {
+            name: req.body.name[0],
+            location: req.body.location[0],
+            screenName: req.body.screenName[0],
+            description: req.body.description[0]
+        };
+        twitterService.searchUsers(req.params[0], search_criteria, global['confidenceCriteria'], criteria).then(function (result) {
             return res.view({
                 users: result
             });
+        }).catch(function (err) {
+            sails.log.error(err);
+            res.send(err.statusCode);
         });
     };
     TwitterController.prototype.searchCriteria = function (req, res) {
@@ -57,26 +58,13 @@ var TwitterController = (function () {
         if (!criteria.where.screen_name) {
             criteria.where.screen_name = 'D_Asterra';
         }
-        /*var result = await twitterService.find(req.params[0], 'timeline', criteria);
-        sails.log.debug('search/user_timeline result, ', result);
-        res.send(result);*/
-        var timeline = async(function (req, res) {
-            return await(twitterService.find(req.params[0], 'timeline', criteria));
-        });
-        timeline(req, res).then(function (result) {
+        twitterService.find(req.params[0], 'timeline', criteria).then(function (result) {
             sails.log.debug('search/user_timeline result, ', result);
             res.send(result);
-        });
-        /*twitterService.find(req.params[0], 'timeline', criteria, (err, result)=> {
-          if (err) {
-            //noinspection TypeScriptUnresolvedVariable
+        }).catch(function (err) {
             sails.log.error(err);
             res.send(err.statusCode);
-          } else {
-            sails.log.debug('search/user_timeline result, ', result);
-            res.send(result);
-          }
-        });*/
+        });
     };
     TwitterController.prototype.tweets = function (req, res) {
         var criteria = {
@@ -86,16 +74,13 @@ var TwitterController = (function () {
             }
         };
         sails.log.debug(criteria);
-        /*twitterService.find(req.params[0], 'tweets', criteria, (err, result)=> {
-          if (err) {
-            sails.log.error(err);
-            res.send(err.statusCode);
-          } else {
+        twitterService.find(req.params[0], 'tweets', criteria).then(function (result) {
             sails.log.debug('search/tweets result, ', result);
             res.send(result);
-          }
-    
-        });*/
+        }).catch(function (err) {
+            sails.log.error(err);
+            res.send(err.statusCode);
+        });
     };
     TwitterController.prototype.lookup = function (req, res) {
         //twitter.find();
@@ -107,16 +92,13 @@ var TwitterController = (function () {
         }
         sails.log.debug(criteria);
         //sails.log.debug("twitterService >> "+twitterService);
-        /*twitterService.find(req.params[0], 'lookup', criteria, (err, result)=> {
-          if (err) {
-            sails.log.error(err);
-            res.send(err.statusCode);
-          } else {
+        twitterService.find(req.params[0], 'lookup', criteria).then(function (result) {
             sails.log.debug('user/lookup result, ', result);
             res.send(result);
-          }
-    
-        });*/
+        }).catch(function (err) {
+            sails.log.error(err);
+            res.send(err.statusCode);
+        });
     };
     return TwitterController;
 }());

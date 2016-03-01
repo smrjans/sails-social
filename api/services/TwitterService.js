@@ -56,39 +56,39 @@ var TwitterService = (function () {
             sails.log.debug('twitter >> ', twitter);
             switch (collectionName) {
                 case 'trendsPlace':
-                    return await(_this.trendsPlace(twitter, criteria));
+                    return _this.trendsPlace(twitter, criteria);
                 case 'trends':
-                    return await(_this.trends(twitter, criteria));
+                    return _this.trends(twitter, criteria);
                 case 'tweets':
-                    return await(_this.tweets(twitter, criteria));
+                    return _this.tweets(twitter, criteria);
                 case 'timeline':
-                    return await(_this.timeline(twitter, criteria));
+                    return _this.timeline(twitter, criteria);
                 case 'lookup':
-                    return await(_this.lookup(twitter, criteria));
+                    return _this.lookup(twitter, criteria);
                 //case 'user' : return this.searchUsers(twitter, criteria, searchCriteria, confidenceCriteria, afterwards);
                 default:
-                    return await(_this.timeline(twitter, criteria));
+                    return _this.timeline(twitter, criteria);
             }
         })(username, collectionName, options);
     };
     TwitterService.prototype.tweets = function (twitter, criteria) {
         return async(function (twitter, criteria) {
-            return await(twitter.get('search/tweets', criteria));
+            return twitter.get('search/tweets', criteria);
         })(twitter, criteria);
     };
     TwitterService.prototype.trendsPlace = function (twitter, criteria) {
         return async(function (twitter, criteria) {
-            return await(twitter.get('trends/place', {
+            return twitter.get('trends/place', {
                 id: criteria.id || 1
-            }));
+            });
         })(twitter, criteria);
     };
     TwitterService.prototype.trends = function (twitter, criteria) {
         return async(function (twitter, criteria) {
-            return await(twitter.get('trends/closest', {
+            return twitter.get('trends/closest', {
                 lat: criteria.lat || 0,
                 long: criteria.long || 0
-            }));
+            });
         })(twitter, criteria);
     };
     TwitterService.prototype.timeline = function (twitter, criteria) {
@@ -96,13 +96,13 @@ var TwitterService = (function () {
             console.log('getting timeline data for user: ', criteria);
             if (criteria.limit)
                 criteria.count = criteria.limit;
-            return await(twitter.get('statuses/user_timeline', criteria));
+            return twitter.get('statuses/user_timeline', criteria);
         })(twitter, criteria);
     };
     TwitterService.prototype.lookup = function (twitter, criteria) {
         return async(function (twitter, criteria) {
             console.log('looking up users: ', criteria);
-            return await(twitter.get('users/lookup', criteria));
+            return twitter.get('users/lookup', criteria);
         })(twitter, criteria);
     };
     /**
@@ -114,7 +114,7 @@ var TwitterService = (function () {
         return async(function (username, criteria, searchCriteria, confidenceCriteria) {
             sails.log.debug("search_criteria ++++++ " + searchCriteria.description);
             var twitter = await(_this.twitter(username));
-            var result = await(twitter.get('users/search', criteria));
+            var result = twitter.get('users/search', criteria);
             return _this.calculateConfidence(result, searchCriteria, confidenceCriteria);
         })(username, criteria, searchCriteria, confidenceCriteria);
     };

@@ -65,18 +65,18 @@ export class TwitterService{
 
       switch (collectionName) {
         case 'trendsPlace'  :
-          return await(this.trendsPlace(twitter, criteria));
+          return this.trendsPlace(twitter, criteria);
         case 'trends'  :
-          return await(this.trends(twitter, criteria));
+          return this.trends(twitter, criteria);
         case 'tweets'  :
-          return await(this.tweets(twitter, criteria));
+          return this.tweets(twitter, criteria);
         case 'timeline' :
-          return await(this.timeline(twitter, criteria));
+          return this.timeline(twitter, criteria);
         case 'lookup' :
-          return await(this.lookup(twitter, criteria));
+          return this.lookup(twitter, criteria);
         //case 'user' : return this.searchUsers(twitter, criteria, searchCriteria, confidenceCriteria, afterwards);
         default:
-          return await(this.timeline(twitter, criteria));
+          return this.timeline(twitter, criteria);
           //return null; //this.rest(twitter, collectionName, criteria);
       }
     })(username, collectionName, options);
@@ -84,24 +84,24 @@ export class TwitterService{
 
   tweets(twitter, criteria) {
     return async((twitter, criteria)=>{
-      return await(twitter.get('search/tweets', criteria));
+      return twitter.get('search/tweets', criteria);
     })(twitter, criteria);
   }
 
   trendsPlace(twitter, criteria)  {
     return async((twitter, criteria)=>{
-      return await(twitter.get('trends/place', {
+      return twitter.get('trends/place', {
         id: criteria.id || 1
-      }));
+      });
     })(twitter, criteria);
   }
 
   trends(twitter, criteria) {
     return async((twitter, criteria)=> {
-      return await(twitter.get('trends/closest', {
+      return twitter.get('trends/closest', {
         lat: criteria.lat || 0,
         long: criteria.long || 0
-      }));
+      });
     })(twitter, criteria);
   }
 
@@ -110,14 +110,14 @@ export class TwitterService{
       console.log('getting timeline data for user: ', criteria);
       if (criteria.limit) criteria.count = criteria.limit;
 
-      return await(twitter.get('statuses/user_timeline', criteria));
+      return twitter.get('statuses/user_timeline', criteria);
     })(twitter, criteria);
   }
 
   lookup(twitter, criteria) {
     return async((twitter, criteria)=> {
       console.log('looking up users: ', criteria);
-      return await(twitter.get('users/lookup', criteria));
+      return twitter.get('users/lookup', criteria);
     })(twitter, criteria);
   }
 
@@ -129,7 +129,7 @@ export class TwitterService{
     return async((username, criteria,searchCriteria,confidenceCriteria)=> {
       sails.log.debug("search_criteria ++++++ " + searchCriteria.description);
       var twitter = await(this.twitter(username));
-      var result = await(twitter.get('users/search', criteria));
+      var result = twitter.get('users/search', criteria);
       return this.calculateConfidence(result, searchCriteria, confidenceCriteria);
     })(username, criteria,searchCriteria,confidenceCriteria);
   }
