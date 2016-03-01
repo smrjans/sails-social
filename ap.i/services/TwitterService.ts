@@ -22,7 +22,8 @@ var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
 export class TwitterService{
   twitter(username): Promise<any> {
     return async(username=>{
-      await(User.find({name: username}).populateAll().exec((err, users) => {
+      var deferred = Promise.defer();
+      User.find({username: username}).populateAll().exec((err, users) => {
         if (err) {
           sails.log.error('Invalid user', user);
           return null;
@@ -44,8 +45,9 @@ export class TwitterService{
           access_token_secret: passport.tokens.tokenSecret,
           timeout_ms: 60 * 1000
         });
-        return twitter;
-      }));
+         deferred.resolve(twitter);
+      });
+      return deferred.promise;
     })(username);
   }
 

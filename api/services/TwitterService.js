@@ -14,7 +14,8 @@ var TwitterService = (function () {
     }
     TwitterService.prototype.twitter = function (username) {
         return async(function (username) {
-            await(User.find({ name: username }).populateAll().exec(function (err, users) {
+            var deferred = Promise.defer();
+            User.find({ username: username }).populateAll().exec(function (err, users) {
                 if (err) {
                     sails.log.error('Invalid user', user);
                     return null;
@@ -36,8 +37,9 @@ var TwitterService = (function () {
                     access_token_secret: passport.tokens.tokenSecret,
                     timeout_ms: 60 * 1000
                 });
-                return twitter;
-            }));
+                deferred.resolve(twitter);
+            });
+            return deferred.promise;
         })(username);
     };
     TwitterService.prototype.find = function (username, collectionName, options) {
