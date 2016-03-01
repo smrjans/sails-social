@@ -22,7 +22,7 @@ var accessTokenSecret = sails.config.connections.twitter.consumerSecret;
 export class TwitterService{
   twitter(username): Promise<any> {
     return async(username=>{
-      User.find({name: username}).populateAll().exec((err, users) => {
+      await(User.find({name: username}).populateAll().exec((err, users) => {
         if (err) {
           sails.log.error('Invalid user', user);
           return null;
@@ -45,12 +45,13 @@ export class TwitterService{
           timeout_ms: 60 * 1000
         });
         return twitter;
-      });
+      }));
     })(username);
   }
 
   find(username, collectionName, options){
     return async((username, collectionName, options)=> {
+      if(!username) username = "smrsahu";
       sails.log.debug('username >> ', username);
       sails.log.debug('collectionName >> ', collectionName);
       sails.log.debug('options >> ', options);
@@ -58,20 +59,23 @@ export class TwitterService{
       // for now, only use the "where" part of the criteria set
       var criteria = options.where || {};
       var twitter = await(this.twitter(username));
+      sails.log.debug('twitter >> ', twitter);
+
       switch (collectionName) {
         case 'trendsPlace'  :
-          return this.trendsPlace(twitter, criteria);
+          return await(this.trendsPlace(twitter, criteria));
         case 'trends'  :
-          return this.trends(twitter, criteria);
+          return await(this.trends(twitter, criteria));
         case 'tweets'  :
-          return this.tweets(twitter, criteria);
+          return await(this.tweets(twitter, criteria));
         case 'timeline' :
-          return this.timeline(twitter, criteria);
+          return await(this.timeline(twitter, criteria));
         case 'lookup' :
-          return this.lookup(twitter, criteria);
+          return await(this.lookup(twitter, criteria));
         //case 'user' : return this.searchUsers(twitter, criteria, searchCriteria, confidenceCriteria, afterwards);
         default:
-          return null; //this.rest(twitter, collectionName, criteria);
+          return await(this.timeline(twitter, criteria));
+          //return null; //this.rest(twitter, collectionName, criteria);
       }
     })(username, collectionName, options);
   }

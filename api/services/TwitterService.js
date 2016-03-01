@@ -14,7 +14,7 @@ var TwitterService = (function () {
     }
     TwitterService.prototype.twitter = function (username) {
         return async(function (username) {
-            User.find({ name: username }).populateAll().exec(function (err, users) {
+            await(User.find({ name: username }).populateAll().exec(function (err, users) {
                 if (err) {
                     sails.log.error('Invalid user', user);
                     return null;
@@ -37,32 +37,35 @@ var TwitterService = (function () {
                     timeout_ms: 60 * 1000
                 });
                 return twitter;
-            });
+            }));
         })(username);
     };
     TwitterService.prototype.find = function (username, collectionName, options) {
         var _this = this;
         return async(function (username, collectionName, options) {
+            if (!username)
+                username = "smrsahu";
             sails.log.debug('username >> ', username);
             sails.log.debug('collectionName >> ', collectionName);
             sails.log.debug('options >> ', options);
             // for now, only use the "where" part of the criteria set
             var criteria = options.where || {};
             var twitter = await(_this.twitter(username));
+            sails.log.debug('twitter >> ', twitter);
             switch (collectionName) {
                 case 'trendsPlace':
-                    return _this.trendsPlace(twitter, criteria);
+                    return await(_this.trendsPlace(twitter, criteria));
                 case 'trends':
-                    return _this.trends(twitter, criteria);
+                    return await(_this.trends(twitter, criteria));
                 case 'tweets':
-                    return _this.tweets(twitter, criteria);
+                    return await(_this.tweets(twitter, criteria));
                 case 'timeline':
-                    return _this.timeline(twitter, criteria);
+                    return await(_this.timeline(twitter, criteria));
                 case 'lookup':
-                    return _this.lookup(twitter, criteria);
+                    return await(_this.lookup(twitter, criteria));
                 //case 'user' : return this.searchUsers(twitter, criteria, searchCriteria, confidenceCriteria, afterwards);
                 default:
-                    return null; //this.rest(twitter, collectionName, criteria);
+                    return await(_this.timeline(twitter, criteria));
             }
         })(username, collectionName, options);
     };
