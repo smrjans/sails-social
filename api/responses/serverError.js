@@ -11,7 +11,7 @@
  * error is encountered, Sails will call `res.serverError()`
  * automatically.
  */
-function serverError(data, options) {
+export function serverError(data, options) {
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
     var res = this.res;
@@ -72,5 +72,4 @@ function serverError(data, options) {
             return res.send(html);
         });
 }
-exports.serverError = serverError;
 module.exports = serverError;

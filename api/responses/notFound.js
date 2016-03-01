@@ -16,7 +16,7 @@
  * or route blueprints (i.e. "shadow routes", Sails will call `res.notFound()`
  * automatically.
  */
-function notFound(data, options) {
+export function notFound(data, options) {
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
     var res = this.res;
@@ -77,5 +77,4 @@ function notFound(data, options) {
             return res.send(html);
         });
 }
-exports.notFound = notFound;
 module.exports = notFound;

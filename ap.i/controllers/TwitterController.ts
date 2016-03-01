@@ -13,6 +13,8 @@ import {TwitterService} from "../services/TwitterService";
  */
 
 var twitterService: TwitterService = require("../services/TwitterService");
+var Promise = require('bluebird');
+var _ = require('lodash');
 
 declare var global: Global;
 declare var sails: Sails;
@@ -20,7 +22,7 @@ declare var Twitter: Model;
 
 export class TwitterController {
 
-  search(req, res){
+  async search(req, res){
     var criteria = {
       where: {
         q:req.body.name[0],
@@ -34,16 +36,9 @@ export class TwitterController {
       description:req.body.description[0]
     };
 
-    twitterService.searchUsers(req.params[0], search_criteria,global['confidenceCriteria'],criteria, (err, result) => {
-      if (err) {
-        sails.log.error(err);
-        res.send(err.statusCode);
-      } else {
-        return res.view({
-          users : result
-        });
-      }
-
+    var result = twitterService.searchUsers(req.params[0], search_criteria,global['confidenceCriteria'],criteria);
+    return res.view({
+      users : result
     });
   }
 
@@ -65,7 +60,7 @@ export class TwitterController {
     });
   }
 
-  timeline(req, res){
+  async timeline(req, res){
     //Use the Waterline syntax
 
     var criteria = {
@@ -75,7 +70,17 @@ export class TwitterController {
       criteria.where.screen_name = 'D_Asterra';
     }
 
-    twitterService.find(req.params[0], 'timeline', criteria, (err, result)=> {
+    var result = await twitterService.find(req.params[0], 'timeline', criteria);
+    sails.log.debug('search/user_timeline result, ', result);
+    res.send(result);
+    /*var result = async(()=>{
+      return await(twitterService.find(req.params[0], 'timeline', criteria));
+    });
+    result().then(result => {
+      sails.log.debug('search/user_timeline result, ', result);
+      res.send(result);
+    });*/
+    /*twitterService.find(req.params[0], 'timeline', criteria, (err, result)=> {
       if (err) {
         //noinspection TypeScriptUnresolvedVariable
         sails.log.error(err);
@@ -84,7 +89,7 @@ export class TwitterController {
         sails.log.debug('search/user_timeline result, ', result);
         res.send(result);
       }
-    });
+    });*/
   }
 
   tweets(req, res){
@@ -96,7 +101,7 @@ export class TwitterController {
     };
     sails.log.debug(criteria);
 
-    twitterService.find(req.params[0], 'tweets', criteria, (err, result)=> {
+    /*twitterService.find(req.params[0], 'tweets', criteria, (err, result)=> {
       if (err) {
         sails.log.error(err);
         res.send(err.statusCode);
@@ -105,7 +110,7 @@ export class TwitterController {
         res.send(result);
       }
 
-    });
+    });*/
   }
 
   lookup(req: Request, res: Response){
@@ -119,7 +124,7 @@ export class TwitterController {
     sails.log.debug(criteria);
     //sails.log.debug("twitterService >> "+twitterService);
 
-    twitterService.find(req.params[0], 'lookup', criteria, (err, result)=> {
+    /*twitterService.find(req.params[0], 'lookup', criteria, (err, result)=> {
       if (err) {
         sails.log.error(err);
         res.send(err.statusCode);
@@ -128,7 +133,7 @@ export class TwitterController {
         res.send(result);
       }
 
-    });
+    });*/
   }
 
 }

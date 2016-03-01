@@ -7,14 +7,14 @@ import Global = NodeJS.Global;
  */
 
 
-declare var global: Global;//.loggedInProfile;
+//declare var global: Global;//.loggedInProfile;
 module.exports = {
     // Index page
     index : function (req, res) {
 
 
         return res.view({
-        	user:global['loggedInProfile']._json
+        	//user:global['loggedInProfile']._json
         });
     }
 };

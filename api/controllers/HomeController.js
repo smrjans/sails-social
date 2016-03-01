@@ -1,8 +1,6 @@
-var HomeController = (function () {
-    function HomeController() {
-    }
+export class HomeController {
     // Index page
-    HomeController.prototype.index = function (req, res) {
+    index(req, res) {
         console.log("+ HOME.INDEX");
         var enableLocalAuth = sails.config.authEnabled.local;
         var enableTwitterAuth = sails.config.authEnabled.twitter;
@@ -25,8 +23,6 @@ var HomeController = (function () {
             twitterAuthMsg: twitterAuthMsg,
             facebookAuthMsg: facebookAuthMsg
         });
-    };
-    return HomeController;
-})();
-exports.HomeController = HomeController;
-module.exports = new HomeController();
+    }
+}
+module.exports = HomeController;

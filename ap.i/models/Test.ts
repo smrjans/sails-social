@@ -7,9 +7,10 @@
 
 export module sails.models {
   export class Test {
-    attributes:{
+    attributes = {
 
-    }
+    };
+    connection = 'someMongodbServer';
   }
   module.exports = new Test();
 }

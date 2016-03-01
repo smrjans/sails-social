@@ -7,3 +7,4 @@
 /// <reference path="q/Q.d.ts" />
 /// <reference path="lodash/lodash.d.ts" />
 /// <reference path="sails/sails.d.ts" />
+/// <reference path="bluebird/bluebird.d.ts" />

@@ -14,7 +14,7 @@
  * );
  * ```
  */
-function badRequest(data, options) {
+export function badRequest(data, options) {
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
     var res = this.res;
@@ -62,5 +62,4 @@ function badRequest(data, options) {
             return res.jsonx(data);
         });
 }
-exports.badRequest = badRequest;
 module.exports = badRequest;

@@ -10,7 +10,7 @@
  * @param  {String|Object} options
  *          - pass string to render specified view
  */
-function created(data, options) {
+export function created(data, options) {
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
     var res = this.res;
@@ -47,5 +47,4 @@ function created(data, options) {
             return res.jsonx(data);
         });
 }
-exports.created = created;
 module.exports = created;
