@@ -23,28 +23,34 @@ export class TwitterService{
   twitter(username): Promise<any> {
     return async(username=>{
       var deferred = Promise.defer();
+      var twitter = new Twit({
+        consumer_key: apiKey,
+        consumer_secret: apiSecret,
+        app_only_auth: true,
+        timeout_ms: 60 * 1000
+      });
       User.find({username: username}).populateAll().exec((err, users) => {
         if (err) {
-          sails.log.error('Invalid user', user);
-          return null;
+          sails.log.error('Invalid user', err);
         }
-        sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
         if (!users || !users.length) {
           sails.log.error("No such user found");
+        }else {
+          sails.log.info('Wow, there are %d users named Finn.  Check it out:', users.length, users);
+          var user = users[0];
+          if (user && user.passports && user.passports.length) {
+            sails.log.error('Invalid user... no passports...', user);
+          }else {
+            var passport = user.passports[user.passports.length - 1];
+            twitter = new Twit({
+              consumer_key: apiKey,
+              consumer_secret: apiSecret,
+              access_token: passport.tokens.token,
+              access_token_secret: passport.tokens.tokenSecret,
+              timeout_ms: 60 * 1000
+            });
+          }
         }
-        var user = users[0];
-        if (!user || !user.passports || !user.passports.length) {
-          sails.log.error('Invalid user', user);
-          return null;
-        }
-        var passport = user.passports[user.passports.length - 1];
-        var twitter = new Twit({
-          consumer_key: apiKey,
-          consumer_secret: apiSecret,
-          access_token: passport.tokens.token,
-          access_token_secret: passport.tokens.tokenSecret,
-          timeout_ms: 60 * 1000
-        });
          deferred.resolve(twitter);
       });
       return deferred.promise;
