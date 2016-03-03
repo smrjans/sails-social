@@ -15,7 +15,7 @@ module.exports = function(grunt) {
   grunt.config.set('clean', {
     dev: ['.tmp/public/**'],
     build: ['www'],
-    ts: ['api/**']
+    ts: ['api']
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');

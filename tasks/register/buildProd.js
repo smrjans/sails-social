@@ -23,7 +23,6 @@ module.exports = function(grunt) {
     'cssmin',
     'linkAssetsBuildProd',
     'clean:build',
-    'clean:ts',
     'ts:server_commonJs',
     'copy:build'
   ]);
