@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                     //dest: ''// Will generate at the exact same location as the source.
                 }
             ],
-
+            watch: "ap.i",
             options: {
                 compiler: 'node_modules/typescript/bin/tsc',
                 module: 'commonjs',

@@ -4,7 +4,7 @@ var HomeController = (function () {
     }
     // Index page
     HomeController.prototype.index = function (req, res) {
-        console.log("+ HOME.INDEX222");
+        console.log("+ HOME.INDEX111");
         var enableLocalAuth = sails.config.authEnabled.local;
         var enableTwitterAuth = sails.config.authEnabled.twitter;
         var enableFacebookAuth = sails.config.authEnabled.facebook;
