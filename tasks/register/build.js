@@ -22,6 +22,7 @@ module.exports = function(grunt) {
     'compileAssets',
     'linkAssetsBuild',
     'clean:build',
+    'ts:server_commonJs',
     'copy:build'
   ]);
 };

@@ -48,3 +48,4 @@ var AccountController = (function () {
 }());
 exports.AccountController = AccountController;
 module.exports = new AccountController();
+//# sourceMappingURL=AccountController.js.map

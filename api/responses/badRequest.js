@@ -65,3 +65,4 @@ function badRequest(data, options) {
 }
 exports.badRequest = badRequest;
 module.exports = badRequest;
+//# sourceMappingURL=badRequest.js.map

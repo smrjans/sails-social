@@ -31,3 +31,4 @@ var HomeController = (function () {
 }());
 exports.HomeController = HomeController;
 module.exports = new HomeController();
+//# sourceMappingURL=HomeController.js.map

@@ -16,3 +16,4 @@ var TestController = (function () {
 }());
 exports.TestController = TestController;
 module.exports = new TestController();
+//# sourceMappingURL=TestController.js.map

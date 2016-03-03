@@ -22,7 +22,7 @@ module.exports = function(grunt) {
                 target: 'es5',
                 fast: 'watch',
                 comments: true,
-                sourceMap: false,// Useless on the server side.
+                sourceMap: true,// Useless on the server side.
                 declaration: false,// Always useful to have declarations available.
                 noEmitOnError: true,// Force log errors.
                 failOnTypeErrors: true,// Force log grunt errors pipeline.

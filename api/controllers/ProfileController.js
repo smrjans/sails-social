@@ -11,3 +11,4 @@ module.exports = {
         return res.view({});
     }
 };
+//# sourceMappingURL=ProfileController.js.map

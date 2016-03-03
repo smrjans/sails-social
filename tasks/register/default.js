@@ -17,5 +17,5 @@
  *
  */
 module.exports = function (grunt) {
-  grunt.registerTask('default', ['ts:server_commonJs', 'compileAssets', 'linkAssets', 'watch']);
+  grunt.registerTask('default', ['compileAssets', 'linkAssets', 'ts:server_commonJs', 'watch']);
 };

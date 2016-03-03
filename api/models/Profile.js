@@ -12,3 +12,4 @@ var Profile = (function () {
 }());
 exports.Profile = Profile;
 module.exports = new Profile();
+//# sourceMappingURL=Profile.js.map

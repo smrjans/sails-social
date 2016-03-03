@@ -75,3 +75,4 @@ function forbidden(data, options) {
 }
 exports.forbidden = forbidden;
 module.exports = forbidden;
+//# sourceMappingURL=forbidden.js.map

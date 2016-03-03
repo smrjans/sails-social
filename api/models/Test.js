@@ -20,3 +20,4 @@ var sails;
         module.exports = new Test();
     })(models = sails.models || (sails.models = {}));
 })(sails = exports.sails || (exports.sails = {}));
+//# sourceMappingURL=Test.js.map
