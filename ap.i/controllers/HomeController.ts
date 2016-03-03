@@ -12,7 +12,7 @@ export class HomeController{
     // Index page
     index(req: Request, res: Response) {
 
-        console.log("+ HOME.INDEX");
+        console.log("+ HOME.INDEX333");
 
         var enableLocalAuth = sails.config.authEnabled.local;
         var enableTwitterAuth = sails.config.authEnabled.twitter;

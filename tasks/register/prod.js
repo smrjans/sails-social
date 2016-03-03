@@ -14,6 +14,7 @@
 module.exports = function(grunt) {
   grunt.registerTask('prod', [
     'compileAssets',
+    'clean:ts',
     'ts:server_commonJs',
     'concat',
     'uglify',
